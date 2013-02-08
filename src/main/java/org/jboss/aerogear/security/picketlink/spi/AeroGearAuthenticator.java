@@ -11,8 +11,9 @@ import org.picketlink.idm.model.User;
 import javax.inject.Inject;
 
 public class AeroGearAuthenticator extends BaseAuthenticator {
-    @Inject @AeroGear
+    @Inject
     IdentityManager identityManager;
+    
     @Inject DefaultLoginCredentials credentials;
     
     @Override
