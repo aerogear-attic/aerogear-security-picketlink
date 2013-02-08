@@ -20,7 +20,6 @@ package org.jboss.aerogear.security.picketlink.authz;
 
 import org.jboss.aerogear.security.authz.IdentityManagement;
 import org.jboss.aerogear.security.model.AeroGearUser;
-import org.jboss.aerogear.security.picketlink.spi.AeroGear;
 import org.jboss.aerogear.security.picketlink.util.Converter;
 import org.picketlink.idm.IdentityManager;
 import org.picketlink.idm.model.SimpleUser;
@@ -38,7 +37,7 @@ import java.util.List;
 @ApplicationScoped
 public class IdentityManagementImpl implements IdentityManagement {
 
-    @Inject @AeroGear
+    @Inject
     private IdentityManager identityManager;
 
     @Inject

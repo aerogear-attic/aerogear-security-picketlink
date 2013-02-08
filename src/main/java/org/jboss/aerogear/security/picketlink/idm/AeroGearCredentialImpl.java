@@ -19,7 +19,6 @@ package org.jboss.aerogear.security.picketlink.idm;
 
 import org.jboss.aerogear.security.auth.LoggedUser;
 import org.jboss.aerogear.security.idm.AeroGearCredential;
-import org.jboss.aerogear.security.picketlink.spi.AeroGear;
 import org.picketlink.Identity;
 import org.picketlink.idm.IdentityManager;
 
@@ -35,7 +34,7 @@ public class AeroGearCredentialImpl implements AeroGearCredential {
     @Inject
     private Identity identity;
 
-    @Inject @AeroGear
+    @Inject
     private IdentityManager identityManager;
 
     /**

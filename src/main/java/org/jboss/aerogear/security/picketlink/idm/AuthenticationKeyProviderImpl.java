@@ -20,7 +20,6 @@ package org.jboss.aerogear.security.picketlink.idm;
 import org.jboss.aerogear.security.auth.Secret;
 import org.jboss.aerogear.security.idm.AuthenticationKeyProvider;
 import org.jboss.aerogear.security.otp.api.Base32;
-import org.jboss.aerogear.security.picketlink.spi.AeroGear;
 import org.picketlink.Identity;
 import org.picketlink.idm.IdentityManager;
 import org.picketlink.idm.model.Attribute;
@@ -39,7 +38,7 @@ public class AuthenticationKeyProviderImpl implements AuthenticationKeyProvider 
     @Inject
     private Identity identity;
 
-    @Inject @AeroGear
+    @Inject
     private IdentityManager identityManager;
 
     /**
