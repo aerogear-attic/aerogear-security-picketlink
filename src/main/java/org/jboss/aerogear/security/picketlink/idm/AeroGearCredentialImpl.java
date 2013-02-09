@@ -21,6 +21,7 @@ import org.jboss.aerogear.security.auth.LoggedUser;
 import org.jboss.aerogear.security.idm.AeroGearCredential;
 import org.picketlink.Identity;
 import org.picketlink.idm.IdentityManager;
+import org.picketlink.idm.model.SimpleRole;
 
 import javax.enterprise.inject.Produces;
 import javax.inject.Inject;
@@ -62,7 +63,9 @@ public class AeroGearCredentialImpl implements AeroGearCredential {
         boolean hasRoles = false;
 
         if (identity.isLoggedIn()) {
-//            hasRoles = identity.getUserContext().getRoleNames().containsAll(roles);
+            for (String role : roles) {
+                hasRoles = identityManager.hasRole(identity.getUser(), new SimpleRole(role));
+            }
         }
 
         return hasRoles;
