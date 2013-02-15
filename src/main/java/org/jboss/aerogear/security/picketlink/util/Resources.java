@@ -14,28 +14,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jboss.aerogear.controller.demo;
+package org.jboss.aerogear.security.picketlink.util;
 
-/**
- * <em>Home</em> is a pojo class which treats
- * requests of these application.
- * Each method must have an associated route
- * so that it can respond to a requisition.
- *
- * @see Routes
- */
-public class Home {
+import org.picketlink.annotations.PicketLink;
 
-    /**
-     * Respond to a GET request to "/". The response page follow
-     * a convention, having a <em>folder/jsp</em> at the directory <em>WEB-INF/pages</em>.
-     * The folder/jsp are named after the business controller class/method been called, respectively.
-     * Ex: <em>WEB-INF/pages/Home/index.jsp</em>
-     *
-     * @see Routes
-     */
-    public void index() {
-        System.out.println("hello from controller");
-    }
+import javax.enterprise.inject.Produces;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 
+
+public class Resources {
+
+    @SuppressWarnings("unused")
+    @Produces
+    @PicketLink
+    @PersistenceContext(unitName = "picketlink-default")
+    private EntityManager picketLinkEntityManager;
 }

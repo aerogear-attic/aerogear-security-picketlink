@@ -20,8 +20,7 @@ package org.jboss.aerogear.security.picketlink.auth;
 import org.jboss.aerogear.security.auth.CredentialFactory;
 import org.jboss.aerogear.security.model.AeroGearUser;
 import org.picketlink.credential.internal.DefaultLoginCredentials;
-import org.picketlink.idm.credential.internal.Password;
-import org.picketlink.idm.credential.internal.UsernamePasswordCredentials;
+import org.picketlink.idm.credential.Password;
 
 import javax.inject.Inject;
 

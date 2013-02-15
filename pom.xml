@@ -71,6 +71,7 @@
 
         <!-- Define the version of AeroGear APIs we want to import -->
         <aerogear.controller.version>1.0.0.M8</aerogear.controller.version>
+        <aerogear.security.version>1.0.0.CR1-SNAPSHOT</aerogear.security.version>
 
         <aerogear.otp.version>1.0.0.M8</aerogear.otp.version>
         <!-- Define the version of PicketLink APIs we want to import -->

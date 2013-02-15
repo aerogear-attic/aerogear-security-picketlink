@@ -20,7 +20,7 @@ package org.jboss.aerogear.security.picketlink.authz;
 import org.jboss.aerogear.security.authz.IdentityManagement;
 import org.jboss.aerogear.security.model.AeroGearUser;
 import org.picketlink.idm.IdentityManager;
-import org.picketlink.idm.credential.internal.Password;
+import org.picketlink.idm.credential.Password;
 import org.picketlink.idm.model.Role;
 import org.picketlink.idm.model.SimpleRole;
 import org.picketlink.idm.model.User;
