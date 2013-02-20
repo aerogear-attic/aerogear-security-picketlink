@@ -23,7 +23,7 @@
 
     <groupId>org.jboss.aerogear</groupId>
     <artifactId>aerogear-security-picketlink</artifactId>
-    <version>1.0.0.CR1-SNAPSHOT</version>
+    <version>1.0.0.CR1-20022013</version>
     <packaging>jar</packaging>
 
     <name>aerogear-security-picketlink</name>
@@ -71,7 +71,7 @@
 
         <!-- Define the version of AeroGear APIs we want to import -->
         <aerogear.controller.version>1.0.0.M8</aerogear.controller.version>
-        <aerogear.security.version>1.0.0.CR1-SNAPSHOT</aerogear.security.version>
+        <aerogear.security.version>1.0.0.CR1-20022013</aerogear.security.version>
 
         <aerogear.otp.version>1.0.0.M8</aerogear.otp.version>
         <!-- Define the version of PicketLink APIs we want to import -->
