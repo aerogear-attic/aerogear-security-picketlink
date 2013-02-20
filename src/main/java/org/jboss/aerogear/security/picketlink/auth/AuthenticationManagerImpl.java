@@ -50,9 +50,7 @@ public class AuthenticationManagerImpl implements AuthenticationManager {
 
         credentialFactory.setCredential(aeroGearUser);
 
-        if (Identity.AuthenticationResult.SUCCESS == identity.login()) {
-            System.out.println("User logged in");
-        } else {
+        if (identity.login() != Identity.AuthenticationResult.SUCCESS) {
             throw new AeroGearSecurityException(HttpStatus.AUTHENTICATION_FAILED);
         }
     }
