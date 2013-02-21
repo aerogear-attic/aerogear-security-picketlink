@@ -64,7 +64,7 @@ public class AeroGearCredentialImpl implements AeroGearCredential {
 
         if (identity.isLoggedIn()) {
             for (String role : roles) {
-                hasRoles = identityManager.hasRole(identity.getUser(), new SimpleRole(role));
+                hasRoles = identityManager.hasRole(identity.getUser(), identityManager.getRole(role));
             }
         }
 
