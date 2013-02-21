@@ -22,6 +22,7 @@ import org.jboss.aerogear.security.authz.IdentityManagement;
 import org.jboss.aerogear.security.model.AeroGearUser;
 import org.jboss.aerogear.security.picketlink.util.Converter;
 import org.picketlink.idm.IdentityManager;
+import org.picketlink.idm.credential.Password;
 import org.picketlink.idm.model.SimpleUser;
 import org.picketlink.idm.model.User;
 import org.picketlink.idm.query.IdentityQuery;
@@ -92,5 +93,10 @@ public class IdentityManagementImpl implements IdentityManagement {
         picketLinkUser.setFirstName(aeroGearUser.getFirstName());
         picketLinkUser.setLastName(aeroGearUser.getLastName());
         identityManager.add(picketLinkUser);
+        /*
+         * Disclaimer: PlainTextPassword will encode passwords in SHA-512 with SecureRandom-1024 salt
+         * See http://lists.jboss.org/pipermail/security-dev/2013-January/000650.html for more information
+         */
+        identityManager.updateCredential(picketLinkUser, new Password(aeroGearUser.getPassword()));
     }
 }
