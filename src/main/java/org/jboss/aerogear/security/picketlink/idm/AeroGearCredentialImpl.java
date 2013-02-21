@@ -43,10 +43,10 @@ public class AeroGearCredentialImpl implements AeroGearCredential {
      */
     @Produces
     @LoggedUser
-    public String getId() {
+    public String getLogin() {
         String id = null;
         if (identity.isLoggedIn()) {
-            id = identity.getUser().getId();
+            id = identity.getUser().getLoginName();
         }
         return id;
     }
