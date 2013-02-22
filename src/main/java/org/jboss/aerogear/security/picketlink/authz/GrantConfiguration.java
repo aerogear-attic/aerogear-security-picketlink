@@ -20,7 +20,6 @@ package org.jboss.aerogear.security.picketlink.authz;
 import org.jboss.aerogear.security.authz.IdentityManagement;
 import org.jboss.aerogear.security.model.AeroGearUser;
 import org.picketlink.idm.IdentityManager;
-import org.picketlink.idm.credential.Password;
 import org.picketlink.idm.model.Role;
 import org.picketlink.idm.model.SimpleRole;
 import org.picketlink.idm.model.User;
@@ -69,12 +68,6 @@ public class GrantConfiguration implements IdentityManagement.GrantMethods {
     public void to(AeroGearUser aeroGearUser) {
 
         User picketLinkUser = identityManager.getUser(aeroGearUser.getUsername());
-
-        /*
-         * Disclaimer: PlainTextPassword will encode passwords in SHA-512 with SecureRandom-1024 salt
-         * See http://lists.jboss.org/pipermail/security-dev/2013-January/000650.html for more information
-         */
-        identityManager.updateCredential(picketLinkUser, new Password(aeroGearUser.getPassword()));
 
         for (Role role : list) {
             identityManager.grantRole(picketLinkUser, role);
