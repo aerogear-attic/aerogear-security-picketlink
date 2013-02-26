@@ -90,8 +90,8 @@ public class IdentityManagementImpl implements IdentityManagement {
     public void create(AeroGearUser aeroGearUser) {
         User picketLinkUser = new SimpleUser(aeroGearUser.getUsername());
         picketLinkUser.setEmail(aeroGearUser.getEmail());
-        picketLinkUser.setFirstName(aeroGearUser.getFirstName());
-        picketLinkUser.setLastName(aeroGearUser.getLastName());
+        picketLinkUser.setFirstName(aeroGearUser.getFirstname());
+        picketLinkUser.setLastName(aeroGearUser.getLastname());
         identityManager.add(picketLinkUser);
         /*
          * Disclaimer: PlainTextPassword will encode passwords in SHA-512 with SecureRandom-1024 salt

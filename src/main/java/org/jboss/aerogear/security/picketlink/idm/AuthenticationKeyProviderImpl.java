@@ -18,6 +18,7 @@
 package org.jboss.aerogear.security.picketlink.idm;
 
 import org.jboss.aerogear.security.auth.Secret;
+import org.jboss.aerogear.security.auth.Token;
 import org.jboss.aerogear.security.idm.AuthenticationKeyProvider;
 import org.jboss.aerogear.security.otp.api.Base32;
 import org.picketlink.Identity;
@@ -27,6 +28,7 @@ import org.picketlink.idm.model.User;
 
 import javax.enterprise.inject.Produces;
 import javax.inject.Inject;
+import java.util.UUID;
 
 /**
  * Authentication key provider
@@ -34,6 +36,7 @@ import javax.inject.Inject;
 public class AuthenticationKeyProviderImpl implements AuthenticationKeyProvider {
 
     private static final String IDM_SECRET_ATTRIBUTE = "serial";
+    private static final String TOKEN_ATTRIBUTE = "token";
 
     @Inject
     private Identity identity;
@@ -58,5 +61,20 @@ public class AuthenticationKeyProviderImpl implements AuthenticationKeyProvider 
             this.identityManager.update(user);
         }
         return secret.getValue();
+    }
+
+    @Produces
+    @Token
+    public String getToken() {
+        User user = identity.getUser();
+
+        Attribute<String> token = user.getAttribute(TOKEN_ATTRIBUTE);
+
+        if (token == null) {
+            token = new Attribute<String>(TOKEN_ATTRIBUTE, UUID.randomUUID().toString());
+            user.setAttribute(token);
+            this.identityManager.update(user);
+        }
+        return token.getValue();
     }
 }
