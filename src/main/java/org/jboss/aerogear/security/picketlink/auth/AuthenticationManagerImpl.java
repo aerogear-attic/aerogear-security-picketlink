@@ -46,13 +46,15 @@ public class AuthenticationManagerImpl implements AuthenticationManager {
      * @throws org.jboss.aerogear.security.exception.AeroGearSecurityException
      *          on login failure.
      */
-    public void login(AeroGearUser aeroGearUser) {
+    public boolean login(AeroGearUser aeroGearUser) {
 
         credentialFactory.setCredential(aeroGearUser);
 
-        if (identity.login() != Identity.AuthenticationResult.SUCCESS) {
-            throw new AeroGearSecurityException(HttpStatus.AUTHENTICATION_FAILED);
+        if (identity.login() == Identity.AuthenticationResult.SUCCESS) {
+            return true;
         }
+
+        return false;
     }
 
     /**

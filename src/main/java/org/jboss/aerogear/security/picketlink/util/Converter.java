@@ -25,8 +25,8 @@ public class Converter {
         AeroGearUser aeroGearUser = new AeroGearUser();
         aeroGearUser.setUsername(user.getLoginName());
         aeroGearUser.setEmail(user.getEmail());
-        aeroGearUser.setFirstname(user.getFirstName());
-        aeroGearUser.setLastname(user.getLastName());
+        aeroGearUser.setFirstName(user.getFirstName());
+        aeroGearUser.setLastName(user.getLastName());
         return aeroGearUser;
     }
 }
