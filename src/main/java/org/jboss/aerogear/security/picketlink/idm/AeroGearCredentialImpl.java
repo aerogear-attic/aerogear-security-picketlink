@@ -18,13 +18,18 @@
 package org.jboss.aerogear.security.picketlink.idm;
 
 import org.jboss.aerogear.security.auth.LoggedUser;
+import org.jboss.aerogear.security.auth.Roles;
 import org.jboss.aerogear.security.idm.AeroGearCredential;
 import org.picketlink.Identity;
 import org.picketlink.idm.IdentityManager;
+import org.picketlink.idm.model.Role;
 import org.picketlink.idm.model.SimpleRole;
+import org.picketlink.idm.query.IdentityQuery;
 
 import javax.enterprise.inject.Produces;
 import javax.inject.Inject;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -69,5 +74,17 @@ public class AeroGearCredentialImpl implements AeroGearCredential {
         }
 
         return hasRoles;
+    }
+
+    @Produces
+    @Roles
+    public List<String> getRoles() {
+        IdentityQuery<Role> query = identityManager.createIdentityQuery(Role.class);
+        query.setParameter(Role.ROLE_OF, new Object[]{identity.getUser()});
+        List<String> roles = new ArrayList();
+        for (Role role : query.getResultList()) {
+            roles.add(role.getName());
+        }
+        return roles;
     }
 }
