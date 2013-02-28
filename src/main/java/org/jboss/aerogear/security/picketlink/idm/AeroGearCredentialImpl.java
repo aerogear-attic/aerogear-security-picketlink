@@ -64,16 +64,14 @@ public class AeroGearCredentialImpl implements AeroGearCredential {
      */
     @Override
     public boolean hasRoles(Set<String> roles) {
-
-        boolean hasRoles = false;
-
         if (identity.isLoggedIn()) {
             for (String role : roles) {
-                hasRoles = identityManager.hasRole(identity.getUser(), identityManager.getRole(role));
+                if (identityManager.hasRole(identity.getUser(), identityManager.getRole(role))) {
+                    return true;
+                }
             }
         }
-
-        return hasRoles;
+        return false;
     }
 
     @Produces
