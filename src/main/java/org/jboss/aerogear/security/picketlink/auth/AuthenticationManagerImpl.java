@@ -18,11 +18,12 @@
 package org.jboss.aerogear.security.picketlink.auth;
 
 import org.jboss.aerogear.security.auth.AuthenticationManager;
-import org.jboss.aerogear.security.auth.CredentialFactory;
 import org.jboss.aerogear.security.exception.AeroGearSecurityException;
 import org.jboss.aerogear.security.exception.HttpStatus;
 import org.jboss.aerogear.security.model.AeroGearUser;
 import org.picketlink.Identity;
+import org.picketlink.credential.DefaultLoginCredentials;
+import org.picketlink.idm.credential.Password;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -37,7 +38,7 @@ public class AuthenticationManagerImpl implements AuthenticationManager {
     private Identity identity;
 
     @Inject
-    private CredentialFactory credentialFactory;
+    private DefaultLoginCredentials credentials;
 
     /**
      * Logs in the specified {@link AeroGearUser}.
@@ -48,10 +49,12 @@ public class AuthenticationManagerImpl implements AuthenticationManager {
      */
     public boolean login(AeroGearUser aeroGearUser) {
 
-        credentialFactory.setCredential(aeroGearUser);
+        credentials.setUserId(aeroGearUser.getUsername());
+        credentials.setCredential(new Password(aeroGearUser.getPassword()));
 
-        if (identity.login() == Identity.AuthenticationResult.SUCCESS) {
-            return true;
+
+        if (identity.login() != Identity.AuthenticationResult.SUCCESS) {
+            throw new AeroGearSecurityException(HttpStatus.AUTHENTICATION_FAILED);
         }
 
         return false;
