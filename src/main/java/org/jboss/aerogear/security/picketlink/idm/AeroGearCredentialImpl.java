@@ -77,11 +77,15 @@ public class AeroGearCredentialImpl implements AeroGearCredential {
     @Produces
     @Roles
     public List<String> getRoles() {
-        IdentityQuery<Role> query = identityManager.createIdentityQuery(Role.class);
-        query.setParameter(Role.ROLE_OF, new Object[]{identity.getUser()});
+
         List<String> roles = new ArrayList();
-        for (Role role : query.getResultList()) {
-            roles.add(role.getName());
+
+        if (identity.isLoggedIn()) {
+            IdentityQuery<Role> query = identityManager.createIdentityQuery(Role.class);
+            query.setParameter(Role.ROLE_OF, new Object[]{identity.getUser()});
+            for (Role role : query.getResultList()) {
+                roles.add(role.getName());
+            }
         }
         return roles;
     }

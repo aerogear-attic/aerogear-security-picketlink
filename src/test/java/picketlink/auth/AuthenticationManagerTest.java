@@ -18,7 +18,6 @@
 package picketlink.auth;
 
 import org.jboss.aerogear.security.auth.AuthenticationManager;
-import org.jboss.aerogear.security.auth.CredentialFactory;
 import org.jboss.aerogear.security.exception.AeroGearSecurityException;
 import org.jboss.aerogear.security.model.AeroGearUser;
 import org.jboss.aerogear.security.picketlink.auth.AuthenticationManagerImpl;
@@ -39,9 +38,6 @@ public class AuthenticationManagerTest {
     private AeroGearUser aeroGearUser;
     @Mock
     private Identity picketBoxIdentity;
-    @Mock
-    private CredentialFactory credentialFactory;
-
 
     @InjectMocks
     private AuthenticationManager authenticationManager = new AuthenticationManagerImpl();
