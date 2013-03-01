@@ -23,6 +23,8 @@ import org.jboss.aerogear.security.model.AeroGearUser;
 import org.jboss.aerogear.security.picketlink.util.Converter;
 import org.picketlink.idm.IdentityManager;
 import org.picketlink.idm.credential.Password;
+import org.picketlink.idm.model.Role;
+import org.picketlink.idm.model.SimpleRole;
 import org.picketlink.idm.model.SimpleUser;
 import org.picketlink.idm.model.User;
 import org.picketlink.idm.query.IdentityQuery;
@@ -70,10 +72,11 @@ public class IdentityManagementImpl implements IdentityManagement {
     }
 
     @Override
-    public List<AeroGearUser> findAllByRole(String role) {
+    public List<AeroGearUser> findAllByRole(String roleName) {
+        Role role = identityManager.getRole(roleName);
         List aerogearUsers = new ArrayList();
         IdentityQuery<User> query = identityManager.createIdentityQuery(User.class);
-        query.setParameter(User.HAS_ROLE, new String[]{role});
+        query.setParameter(User.HAS_ROLE, role);
         List<User> result = query.getResultList();
         for (User user : result) {
             aerogearUsers.add(Converter.convertToAerogearUser(user));
