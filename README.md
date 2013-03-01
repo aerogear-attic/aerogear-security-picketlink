@@ -5,13 +5,12 @@
         <dependency>
              <groupId>org.jboss.aerogear</groupId>
              <artifactId>aerogear-security-picketlink</artifactId>
-             <version>1.0.0.M1</version>
+             <version>1.0.0.CR1</version>
              <scope>compile</scope>
         </dependency>
 
 ## For further information see:
 
-- [picketlink](https://github.com/picketlink)
 - [PicketLink](https://github.com/picketlink)
 - [Apache DeltaSpike](https://github.com/apache/incubator-deltaspike)
 
