@@ -21,6 +21,7 @@ package org.jboss.aerogear.security.picketlink.authz;
 import org.jboss.aerogear.security.authz.IdentityManagement;
 import org.jboss.aerogear.security.model.AeroGearUser;
 import org.jboss.aerogear.security.picketlink.util.Converter;
+import org.picketlink.Identity;
 import org.picketlink.idm.IdentityManager;
 import org.picketlink.idm.credential.Password;
 import org.picketlink.idm.model.Role;
@@ -46,6 +47,10 @@ public class IdentityManagementImpl implements IdentityManagement {
     @Inject
     private GrantConfiguration grantConfiguration;
 
+    @Inject
+    private Identity identity;
+
+
     /**
      * This method allows to specify which <i>roles</i> must be assigned to {@link org.jboss.aerogear.security.model.AeroGearUser}
      *
@@ -68,6 +73,9 @@ public class IdentityManagementImpl implements IdentityManagement {
 
     @Override
     public void remove(AeroGearUser aeroGearUser) {
+        if (identity.isLoggedIn()) {
+            throw new RuntimeException("User is logged in");
+        }
         identityManager.remove(identityManager.getUser(aeroGearUser.getUsername()));
     }
 
