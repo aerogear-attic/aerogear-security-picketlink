@@ -21,6 +21,7 @@ package org.jboss.aerogear.security.picketlink.authz;
 import org.jboss.aerogear.security.authz.IdentityManagement;
 import org.jboss.aerogear.security.model.AeroGearUser;
 import org.jboss.aerogear.security.picketlink.util.Converter;
+import org.jboss.logging.Logger;
 import org.picketlink.Identity;
 import org.picketlink.idm.IdentityManager;
 import org.picketlink.idm.credential.Password;
@@ -50,7 +51,6 @@ public class IdentityManagementImpl implements IdentityManagement {
     @Inject
     private Identity identity;
 
-
     /**
      * This method allows to specify which <i>roles</i> must be assigned to {@link org.jboss.aerogear.security.model.AeroGearUser}
      *
@@ -73,7 +73,8 @@ public class IdentityManagementImpl implements IdentityManagement {
 
     @Override
     public void remove(AeroGearUser aeroGearUser) {
-        if (identity.isLoggedIn()) {
+
+        if (isLoggedIn(aeroGearUser)) {
             throw new RuntimeException("User is logged in");
         }
         identityManager.remove(identityManager.getUser(aeroGearUser.getUsername()));
@@ -109,5 +110,9 @@ public class IdentityManagementImpl implements IdentityManagement {
          * See http://lists.jboss.org/pipermail/security-dev/2013-January/000650.html for more information
          */
         identityManager.updateCredential(picketLinkUser, new Password(aeroGearUser.getPassword()));
+    }
+
+    private boolean isLoggedIn(AeroGearUser aeroGearUser) {
+        return identity.isLoggedIn() && identity.getUser().getLoginName().equals(aeroGearUser.getUsername());
     }
 }
