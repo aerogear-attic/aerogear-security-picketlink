@@ -51,7 +51,7 @@ public class AuthenticationKeyProviderImpl implements AuthenticationKeyProvider 
     @Secret
     public String getSecret() {
 
-        User user = identity.getUser();
+        User user = (User) identity.getAgent();
 
         Attribute<String> secret = user.getAttribute(IDM_SECRET_ATTRIBUTE);
 
@@ -66,7 +66,7 @@ public class AuthenticationKeyProviderImpl implements AuthenticationKeyProvider 
     @Produces
     @Token
     public String getToken() {
-        User user = identity.getUser();
+        User user = (User) identity.getAgent();
 
         Attribute<String> token = user.getAttribute(TOKEN_ATTRIBUTE);
 
