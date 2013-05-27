@@ -17,17 +17,6 @@
 
 package picketlink.idm;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
-
 import org.jboss.aerogear.security.picketlink.idm.AeroGearCredentialImpl;
 import org.junit.Before;
 import org.junit.Test;
@@ -39,6 +28,17 @@ import org.picketlink.idm.IdentityManager;
 import org.picketlink.idm.model.Role;
 import org.picketlink.idm.model.SimpleUser;
 import org.picketlink.idm.model.User;
+
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
+
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 public class AeroGearCredentialTest {
 
@@ -66,6 +66,11 @@ public class AeroGearCredentialTest {
         when(identityManager.hasRole(any(User.class), eq(role))).thenReturn(true);
         Set<String> roles = new HashSet<String>(Arrays.asList("manager", "developer"));
         assertTrue(aeroGearCredential.hasRoles(roles));
+    }
+
+    @Test
+    public void testGetRoles() throws Exception {
+
     }
 
     @Test

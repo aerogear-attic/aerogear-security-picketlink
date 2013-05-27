@@ -23,7 +23,6 @@ import org.jboss.aerogear.security.idm.AeroGearCredential;
 import org.picketlink.Identity;
 import org.picketlink.idm.IdentityManager;
 import org.picketlink.idm.model.Role;
-import org.picketlink.idm.model.SimpleRole;
 import org.picketlink.idm.query.IdentityQuery;
 
 import javax.enterprise.inject.Produces;
