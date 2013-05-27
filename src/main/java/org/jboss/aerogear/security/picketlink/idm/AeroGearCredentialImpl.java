@@ -51,7 +51,7 @@ public class AeroGearCredentialImpl implements AeroGearCredential {
     public String getLogin() {
         String id = null;
         if (identity.isLoggedIn()) {
-            id = identity.getUser().getLoginName();
+            id = identity.getAgent().getLoginName();
         }
         return id;
     }
@@ -66,7 +66,7 @@ public class AeroGearCredentialImpl implements AeroGearCredential {
     public boolean hasRoles(Set<String> roles) {
         if (identity.isLoggedIn()) {
             for (String role : roles) {
-                if (identityManager.hasRole(identity.getUser(), identityManager.getRole(role))) {
+                if (identityManager.hasRole(identity.getAgent(), identityManager.getRole(role))) {
                     return true;
                 }
             }
@@ -82,7 +82,7 @@ public class AeroGearCredentialImpl implements AeroGearCredential {
 
         if (identity.isLoggedIn()) {
             IdentityQuery<Role> query = identityManager.createIdentityQuery(Role.class);
-            query.setParameter(Role.ROLE_OF, new Object[]{identity.getUser()});
+            query.setParameter(Role.ROLE_OF, new Object[]{identity.getAgent()});
             for (Role role : query.getResultList()) {
                 roles.add(role.getName());
             }

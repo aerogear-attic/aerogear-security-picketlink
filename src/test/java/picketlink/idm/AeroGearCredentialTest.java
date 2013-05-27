@@ -55,7 +55,7 @@ public class AeroGearCredentialTest {
     public void setUp() {
         aeroGearCredential = new AeroGearCredentialImpl();
         MockitoAnnotations.initMocks(this);
-        when(identity.getUser()).thenReturn(new SimpleUser("john"));
+        when(identity.getAgent()).thenReturn(new SimpleUser("john"));
         when(identity.isLoggedIn()).thenReturn(true);
     }
 

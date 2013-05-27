@@ -113,6 +113,6 @@ public class IdentityManagementImpl implements IdentityManagement {
     }
 
     private boolean isLoggedIn(AeroGearUser aeroGearUser) {
-        return identity.isLoggedIn() && identity.getUser().getLoginName().equals(aeroGearUser.getUsername());
+        return identity.isLoggedIn() && identity.getAgent().getLoginName().equals(aeroGearUser.getUsername());
     }
 }

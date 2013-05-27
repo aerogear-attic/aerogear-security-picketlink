@@ -23,7 +23,7 @@
 
     <groupId>org.jboss.aerogear</groupId>
     <artifactId>aerogear-security-picketlink</artifactId>
-    <version>1.0.0</version>
+    <version>1.0.1-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <name>aerogear-security-picketlink</name>
@@ -70,11 +70,11 @@
         <javaee6.bom.version>1.0.0.Final</javaee6.bom.version>
 
         <!-- Define the version of AeroGear APIs we want to import -->
-        <aerogear.security.version>1.0.0</aerogear.security.version>
+        <aerogear.security.version>1.0.1-SNAPSHOT</aerogear.security.version>
 
         <aerogear.otp.version>1.0.0</aerogear.otp.version>
         <!-- Define the version of PicketLink APIs we want to import -->
-        <picketlink.version>3.0.0.Beta1</picketlink.version>
+        <picketlink.version>2.5.0.Beta3</picketlink.version>
     </properties>
 
     <dependencyManagement>
@@ -114,30 +114,17 @@
             <scope>provided</scope>
         </dependency>
 
-        <!-- PicketLink -->
         <dependency>
             <groupId>org.picketlink</groupId>
-            <artifactId>picketlink-core-api</artifactId>
-            <version>${picketlink.version}</version>
+            <artifactId>picketlink-api</artifactId>
             <scope>compile</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.picketlink</groupId>
-            <artifactId>picketlink-core-impl</artifactId>
             <version>${picketlink.version}</version>
         </dependency>
 
         <dependency>
             <groupId>org.picketlink</groupId>
-            <artifactId>picketlink-idm-api</artifactId>
-            <version>${picketlink.version}</version>
-            <scope>compile</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.picketlink</groupId>
-            <artifactId>picketlink-idm-impl</artifactId>
+            <artifactId>picketlink-impl</artifactId>
+            <scope>runtime</scope>
             <version>${picketlink.version}</version>
         </dependency>
 
@@ -146,8 +133,6 @@
             <artifactId>picketlink-idm-schema</artifactId>
             <version>${picketlink.version}</version>
         </dependency>
-
-        <!-- end -->
 
         <dependency>
             <groupId>org.jboss.spec</groupId>
