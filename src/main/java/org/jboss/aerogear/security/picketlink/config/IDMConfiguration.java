@@ -18,7 +18,7 @@ package org.jboss.aerogear.security.picketlink.config;
 
 import org.jboss.aerogear.security.picketlink.model.CredentialObject;
 import org.jboss.aerogear.security.picketlink.model.CredentialObjectAttribute;
-import org.jboss.aerogear.security.picketlink.model.IdentityObject;
+import org.jboss.aerogear.security.picketlink.model.User;
 import org.jboss.aerogear.security.picketlink.model.IdentityObjectAttribute;
 import org.jboss.aerogear.security.picketlink.model.PartitionObject;
 import org.jboss.aerogear.security.picketlink.model.RelationshipIdentityObject;
@@ -53,7 +53,7 @@ public class IDMConfiguration {
         builder
                 .stores()
                 .jpa()
-                .identityClass(IdentityObject.class)
+                .identityClass(User.class)
                 .credentialClass(CredentialObject.class)
                 .credentialAttributeClass(CredentialObjectAttribute.class)
                 .attributeClass(IdentityObjectAttribute.class)

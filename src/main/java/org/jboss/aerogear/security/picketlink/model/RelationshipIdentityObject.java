@@ -52,7 +52,7 @@ public class RelationshipIdentityObject implements Serializable {
 
     @Identity
     @ManyToOne
-    private IdentityObject identityObject;
+    private User user;
 
     @Parent
     @ManyToOne
@@ -66,12 +66,12 @@ public class RelationshipIdentityObject implements Serializable {
         this.id = id;
     }
 
-    public IdentityObject getIdentityObject() {
-        return identityObject;
+    public User getUser() {
+        return user;
     }
 
-    public void setIdentityObject(IdentityObject identityObject) {
-        this.identityObject = identityObject;
+    public void setUser(User user) {
+        this.user = user;
     }
 
     public RelationshipObject getRelationshipObject() {

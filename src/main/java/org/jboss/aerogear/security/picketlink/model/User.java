@@ -16,6 +16,7 @@
  */
 package org.jboss.aerogear.security.picketlink.model;
 
+import org.jboss.aerogear.security.model.AeroGearUser;
 import org.picketlink.idm.jpa.annotations.CreationDate;
 import org.picketlink.idm.jpa.annotations.Discriminator;
 import org.picketlink.idm.jpa.annotations.Email;
@@ -47,7 +48,7 @@ import java.util.Date;
  */
 @IdentityType
 @Entity
-public class IdentityObject implements Serializable {
+public class User implements Serializable, AeroGearUser {
 
     private static final long serialVersionUID = -9155861474157098664L;
 
@@ -63,7 +64,7 @@ public class IdentityObject implements Serializable {
     private String id;
 
     @LoginName
-    private String loginName;
+    private String username;
 
     @IdentityName
     private String name;
@@ -90,10 +91,12 @@ public class IdentityObject implements Serializable {
 
     @Parent
     @ManyToOne
-    private IdentityObject parent;
+    private User parent;
 
     @GroupPath
     private String groupPath;
+
+    private String password;
 
     public String getDiscriminator() {
         return this.discriminator;
@@ -127,12 +130,12 @@ public class IdentityObject implements Serializable {
         this.partition = partition;
     }
 
-    public String getLoginName() {
-        return loginName;
+    public String getUsername() {
+        return username;
     }
 
-    public void setLoginName(String loginName) {
-        this.loginName = loginName;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public String getFirstName() {
@@ -159,6 +162,16 @@ public class IdentityObject implements Serializable {
         this.email = email;
     }
 
+    @Override
+    public String getPassword() {
+        return password;
+    }
+
+    @Override
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
     public boolean isEnabled() {
         return enabled;
     }
@@ -183,11 +196,11 @@ public class IdentityObject implements Serializable {
         this.expiryDate = expiryDate;
     }
 
-    public IdentityObject getParent() {
+    public User getParent() {
         return this.parent;
     }
 
-    public void setParent(IdentityObject parent) {
+    public void setParent(User parent) {
         this.parent = parent;
     }
 
@@ -201,7 +214,7 @@ public class IdentityObject implements Serializable {
             return false;
         }
 
-        IdentityObject other = (IdentityObject) obj;
+        User other = (User) obj;
 
         return getId() != null && other.getId() != null && getId().equals(other.getId());
     }

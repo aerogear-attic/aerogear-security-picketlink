@@ -25,7 +25,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.picketlink.idm.IdentityManager;
-import org.picketlink.idm.model.User;
+
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 public class GrantConfigurationTest {
 
@@ -33,7 +35,7 @@ public class GrantConfigurationTest {
     private IdentityManager manager;
 
     @Mock
-    private User user;
+    private org.picketlink.idm.model.User user;
 
     @InjectMocks
     private GrantConfiguration grantConfiguration;
@@ -45,17 +47,17 @@ public class GrantConfigurationTest {
     }
 
     private AeroGearUser buildUser(String username) {
-        AeroGearUser aeroGearUser = new AeroGearUser();
-        aeroGearUser.setUsername(username);
-        aeroGearUser.setEmail(username + "@doe.com");
-        aeroGearUser.setPassword("123");
-        return aeroGearUser;
+        AeroGearUser user = mock(AeroGearUser.class);
+        when(user.getUsername()).thenReturn(username);
+        when(user.getEmail()).thenReturn(username + "@doe.com");
+        when(user.getPassword()).thenReturn("123");
+        return user;
     }
 
     @Test
     public void testGrant() throws Exception {
-        AeroGearUser aeroGearUser = buildUser("john");
+        AeroGearUser user = buildUser("john");
         String[] role = new String[]{"ADMIN"};
-        grantConfiguration.roles(role).to(aeroGearUser);
+        grantConfiguration.roles(role).to(user);
     }
 }

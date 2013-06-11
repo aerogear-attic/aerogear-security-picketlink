@@ -29,7 +29,7 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
 /**
- * A <i>AuthenticationManager</i> implementation executes the basic authentication operations for {@link AeroGearUser}
+ * A <i>AuthenticationManager</i> implementation executes the basic authentication operations for {@link org.jboss.aerogear.security.model.AeroGearUser}
  */
 @ApplicationScoped
 public class AuthenticationManagerImpl implements AuthenticationManager {
@@ -41,17 +41,16 @@ public class AuthenticationManagerImpl implements AuthenticationManager {
     private DefaultLoginCredentials credentials;
 
     /**
-     * Logs in the specified {@link AeroGearUser}.
+     * Logs in the specified {@link org.jboss.aerogear.security.model.AeroGearUser}.
      *
-     * @param aeroGearUser represents a simple implementation that holds user's credentials.
+     * @param user represents a simple implementation that holds user's credentials.
      * @throws org.jboss.aerogear.security.exception.AeroGearSecurityException
      *          on login failure.
      */
-    public boolean login(AeroGearUser aeroGearUser) {
+    public boolean login(AeroGearUser user) {
 
-        credentials.setUserId(aeroGearUser.getUsername());
-        credentials.setCredential(new Password(aeroGearUser.getPassword()));
-
+        credentials.setUserId(user.getUsername());
+        credentials.setCredential(new Password(user.getPassword()));
 
         if (identity.login() != Identity.AuthenticationResult.SUCCESS) {
             throw new AeroGearSecurityException(HttpStatus.AUTHENTICATION_FAILED);
@@ -61,7 +60,7 @@ public class AuthenticationManagerImpl implements AuthenticationManager {
     }
 
     /**
-     * Logs out the specified {@link AeroGearUser} from the system.
+     * Logs out the specified {@link org.jboss.aerogear.security.model.AeroGearUser} from the system.
      *
      * @throws org.jboss.aerogear.security.exception.AeroGearSecurityException
      *          on logout failure.

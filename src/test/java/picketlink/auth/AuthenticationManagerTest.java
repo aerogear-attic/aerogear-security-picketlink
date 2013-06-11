@@ -22,44 +22,54 @@ import org.jboss.aerogear.security.exception.AeroGearSecurityException;
 import org.jboss.aerogear.security.model.AeroGearUser;
 import org.jboss.aerogear.security.picketlink.auth.AuthenticationManagerImpl;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.picketlink.Identity;
+import org.picketlink.credential.DefaultLoginCredentials;
 
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.picketlink.Identity.AuthenticationResult;
 
 public class AuthenticationManagerTest {
 
     @Mock
-    private AeroGearUser aeroGearUser;
+    private AeroGearUser user;
     @Mock
-    private Identity picketBoxIdentity;
+    private Identity identity;
+    @Mock
+    private DefaultLoginCredentials credentials;
 
     @InjectMocks
-    private AuthenticationManager authenticationManager = new AuthenticationManagerImpl();
+    private AuthenticationManager authenticationManager;
 
     @Before
     public void setUp() {
+        authenticationManager = new AuthenticationManagerImpl();
         MockitoAnnotations.initMocks(this);
-        when(aeroGearUser.getUsername()).thenReturn("john");
-        when(aeroGearUser.getPassword()).thenReturn("123");
+        when(user.getUsername()).thenReturn("john");
+        when(user.getPassword()).thenReturn("123");
     }
 
-    @Ignore
+    @Test
+    public void testLogin() throws Exception {
+        AuthenticationResult result = AuthenticationResult.SUCCESS;
+        when(identity.login()).thenReturn(result);
+        authenticationManager.login(user);
+    }
+
     @Test(expected = AeroGearSecurityException.class)
     public void testInvalidLogin() throws Exception {
-        when(picketBoxIdentity.isLoggedIn()).thenReturn(false);
-        authenticationManager.login(aeroGearUser);
+        when(identity.isLoggedIn()).thenReturn(false);
+        authenticationManager.login(user);
     }
 
     @Test
     public void testLogout() throws Exception {
-        when(picketBoxIdentity.isLoggedIn()).thenReturn(true);
+        when(identity.isLoggedIn()).thenReturn(true);
         authenticationManager.logout();
-        verify(picketBoxIdentity).logout();
+        verify(identity).logout();
     }
 }

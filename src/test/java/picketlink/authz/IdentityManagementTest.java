@@ -26,19 +26,32 @@ import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.picketlink.Identity;
 import org.picketlink.idm.IdentityManager;
+import org.picketlink.idm.model.Role;
 import org.picketlink.idm.model.SimpleUser;
 import org.picketlink.idm.model.User;
 import org.picketlink.idm.query.internal.DefaultIdentityQuery;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 public class IdentityManagementTest {
+
+    @Mock
+    private Identity identity;
 
     @Mock
     private IdentityManager identityManager;
@@ -54,24 +67,29 @@ public class IdentityManagementTest {
 
     @Before
     public void setUp() throws Exception {
-        List<User> list = new ArrayList<User>();
+        List<org.picketlink.idm.model.User> list = new ArrayList<org.picketlink.idm.model.User>();
         list.add(new SimpleUser("john"));
 
         identityManagement = new IdentityManagementImpl();
         MockitoAnnotations.initMocks(this);
+
+        when(identity.getAgent()).thenReturn(new SimpleUser("john"));
+        when(identity.isLoggedIn()).thenReturn(true);
+
         when(identityManager.getUser(("john"))).thenReturn(new SimpleUser("john"));
         when(identityManager.getUser(("mike"))).thenReturn(null);
 
-        when(identityManager.createIdentityQuery(User.class)).thenReturn(defaultIdentityQuery);
+        when(identityManager.createIdentityQuery(org.picketlink.idm.model.User.class)).thenReturn(defaultIdentityQuery);
         when(defaultIdentityQuery.getResultList()).thenReturn(list);
+
     }
 
     private AeroGearUser buildUser(String username) {
-        AeroGearUser aeroGearUser = new AeroGearUser();
-        aeroGearUser.setUsername(username);
-        aeroGearUser.setEmail(username + "@doe.com");
-        aeroGearUser.setPassword("123");
-        return aeroGearUser;
+        AeroGearUser user = mock(AeroGearUser.class);
+        when(user.getUsername()).thenReturn(username);
+        when(user.getEmail()).thenReturn(username + "@doe.com");
+        when(user.getPassword()).thenReturn("123");
+        return user;
     }
 
     @Test
@@ -86,28 +104,30 @@ public class IdentityManagementTest {
     public void testCreate() throws Exception {
         AeroGearUser user = buildUser("john");
         identityManagement.create(user);
-        User picketLinkUser = identityManager.getUser("john");
-        assertNotNull("User should exist", picketLinkUser);
-    }
-
-    @Test
-    public void testGet() throws Exception {
-        AeroGearUser aeroGearUser = identityManagement.get("john");
-        assertNotNull("User should exist", aeroGearUser);
+        org.picketlink.idm.model.User picketLinkUser = identityManager.getUser("john");
+        assertNotNull("AeroGearUser should exist", picketLinkUser);
     }
 
     @Test(expected = RuntimeException.class)
     public void testRemove() throws Exception {
-        AeroGearUser user = buildUser("mike");
-        identityManagement.remove(user);
-        AeroGearUser removedUser = identityManagement.get("mike");
-        assertNull("User should not exist", removedUser);
+        identityManagement.remove("mike");
+        AeroGearUser removedUser = identityManagement.findByUsername("mike");
+        assertNull("AeroGearUser should not exist", removedUser);
     }
 
     @Test
-    public void testFindUserByRole() throws Exception {
-        List<AeroGearUser> list = identityManagement.findAllByRole("simple");
-        assertNotNull("User should be found by role", list.get(0));
+    public void testHasRoles() throws Exception {
+        Role role = mock(Role.class);
+        when(identityManager.getRole(eq("manager"))).thenReturn(role);
+        when(identityManager.hasRole(any(User.class), eq(role))).thenReturn(true);
+        Set<String> roles = new HashSet<String>(Arrays.asList("manager", "developer"));
+        assertTrue(identityManagement.hasRoles(roles));
+    }
+
+    @Test
+    public void testRoleNotFound() throws Exception {
+        Set<String> roles = new HashSet<String>(Arrays.asList("guest"));
+        assertFalse(identityManagement.hasRoles(roles));
     }
 
 }

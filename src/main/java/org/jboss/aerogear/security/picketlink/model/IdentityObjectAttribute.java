@@ -47,7 +47,7 @@ public class IdentityObjectAttribute implements Serializable {
     @ManyToOne
     @JoinColumn
     @Parent
-    private IdentityObject identityObject;
+    private User user;
 
     @AttributeName
     private String name;
@@ -67,12 +67,12 @@ public class IdentityObjectAttribute implements Serializable {
         this.id = id;
     }
 
-    public IdentityObject getIdentityObject() {
-        return this.identityObject;
+    public User getUser() {
+        return this.user;
     }
 
-    public void setIdentityObject(IdentityObject identityObject) {
-        this.identityObject = identityObject;
+    public void setUser(User user) {
+        this.user = user;
     }
 
     public String getName() {

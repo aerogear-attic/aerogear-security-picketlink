@@ -62,7 +62,7 @@ public class CredentialObject implements Serializable {
 
     @Parent
     @ManyToOne
-    private IdentityObject identityType;
+    private User identityType;
 
     public Long getId() {
         return id;
@@ -104,11 +104,11 @@ public class CredentialObject implements Serializable {
         this.expiryDate = expiryDate;
     }
 
-    public IdentityObject getIdentityType() {
+    public User getIdentityType() {
         return identityType;
     }
 
-    public void setIdentityType(IdentityObject identityType) {
+    public void setIdentityType(User identityType) {
         this.identityType = identityType;
     }
 

@@ -22,7 +22,6 @@ import org.jboss.aerogear.security.model.AeroGearUser;
 import org.picketlink.idm.IdentityManager;
 import org.picketlink.idm.model.Role;
 import org.picketlink.idm.model.SimpleRole;
-import org.picketlink.idm.model.User;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -30,7 +29,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * <i>GrantMethods</i> implementation is a builder to apply roles to {@link AeroGearUser}
+ * <i>GrantMethods</i> implementation is a builder to apply roles to {@link org.jboss.aerogear.security.model.AeroGearUser}
  */
 @ApplicationScoped
 public class GrantConfiguration implements IdentityManagement.GrantMethods {
@@ -41,7 +40,7 @@ public class GrantConfiguration implements IdentityManagement.GrantMethods {
     private List<Role> list;
 
     /**
-     * This method specifies which roles will be applied to {@link AeroGearUser}
+     * This method specifies which roles will be applied to {@link org.jboss.aerogear.security.model.AeroGearUser}
      *
      * @param roles Array of roles
      * @return builder implementation
@@ -62,12 +61,12 @@ public class GrantConfiguration implements IdentityManagement.GrantMethods {
     /**
      * This method applies roles specified on {@link IdentityManagement#grant(String...)}
      *
-     * @param aeroGearUser represents a simple user's implementation to hold credentials.
+     * @param user represents a simple user's implementation to hold credentials.
      */
     @Override
-    public void to(AeroGearUser aeroGearUser) {
+    public void to(AeroGearUser user) {
 
-        User picketLinkUser = identityManager.getUser(aeroGearUser.getUsername());
+        org.picketlink.idm.model.User picketLinkUser = identityManager.getUser(user.getUsername());
 
         for (Role role : list) {
             identityManager.grantRole(picketLinkUser, role);
