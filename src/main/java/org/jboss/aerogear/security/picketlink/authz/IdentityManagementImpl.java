@@ -21,14 +21,12 @@ package org.jboss.aerogear.security.picketlink.authz;
 import org.jboss.aerogear.security.auth.LoggedUser;
 import org.jboss.aerogear.security.auth.Secret;
 import org.jboss.aerogear.security.authz.IdentityManagement;
-import org.jboss.aerogear.security.model.AeroGearUser;
 import org.jboss.aerogear.security.otp.api.Base32;
 import org.picketlink.Identity;
 import org.picketlink.idm.IdentityManager;
 import org.picketlink.idm.credential.Password;
 import org.picketlink.idm.model.Attribute;
 import org.picketlink.idm.model.Role;
-import org.picketlink.idm.model.SimpleUser;
 import org.picketlink.idm.model.User;
 import org.picketlink.idm.query.IdentityQuery;
 
@@ -68,7 +66,7 @@ public class IdentityManagementImpl implements IdentityManagement<User> {
 
     @Override
     public User findByUsername(String username) throws RuntimeException {
-        User user = identityManager.getUser(username);
+        User user = (User) identityManager.getUser(username);
         if (user == null) {
             throw new RuntimeException("AeroGearUser do not exist");
         }
@@ -90,15 +88,13 @@ public class IdentityManagementImpl implements IdentityManagement<User> {
      * @param user
      */
     @Override
-    public void create(AeroGearUser user) {
-        org.picketlink.idm.model.User picketLinkUser = new SimpleUser(user.getUsername());
-        picketLinkUser.setEmail(user.getEmail());
-        identityManager.add(picketLinkUser);
+    public void create(User user, String password) {
+        identityManager.add(user);
         /*
          * Disclaimer: PlainTextPassword will encode passwords in SHA-512 with SecureRandom-1024 salt
          * See http://lists.jboss.org/pipermail/security-dev/2013-January/000650.html for more information
          */
-        identityManager.updateCredential(picketLinkUser, new Password(user.getPassword()));
+        identityManager.updateCredential(user, new Password(password));
     }
 
     /**
@@ -149,10 +145,10 @@ public class IdentityManagementImpl implements IdentityManagement<User> {
     }
 
     @Override
-    public AeroGearUser findById(long id) throws RuntimeException {
-        IdentityQuery<User> query = identityManager.<User>createIdentityQuery(User.class);
+    public User findById(long id) throws RuntimeException {
+        IdentityQuery<User> query = identityManager.createIdentityQuery(User.class);
         query.setParameter(User.ID, id);
-        return (AeroGearUser) query.getResultList().get(0);
+        return query.getResultList().get(0);
     }
 
     @Override

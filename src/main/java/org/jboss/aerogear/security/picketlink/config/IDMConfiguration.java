@@ -16,16 +16,17 @@
  */
 package org.jboss.aerogear.security.picketlink.config;
 
-import org.jboss.aerogear.security.picketlink.model.CredentialObject;
-import org.jboss.aerogear.security.picketlink.model.CredentialObjectAttribute;
-import org.jboss.aerogear.security.picketlink.model.IdentityObjectAttribute;
-import org.jboss.aerogear.security.picketlink.model.PartitionObject;
-import org.jboss.aerogear.security.picketlink.model.RelationshipIdentityObject;
-import org.jboss.aerogear.security.picketlink.model.RelationshipObject;
-import org.jboss.aerogear.security.picketlink.model.RelationshipObjectAttribute;
-import org.jboss.aerogear.security.picketlink.model.User;
 import org.picketlink.idm.config.IdentityConfiguration;
 import org.picketlink.idm.config.IdentityConfigurationBuilder;
+import org.picketlink.idm.jpa.schema.CredentialObject;
+import org.picketlink.idm.jpa.schema.CredentialObjectAttribute;
+import org.picketlink.idm.jpa.schema.IdentityObject;
+import org.picketlink.idm.jpa.schema.IdentityObjectAttribute;
+import org.picketlink.idm.jpa.schema.PartitionObject;
+import org.picketlink.idm.jpa.schema.RelationshipIdentityObject;
+import org.picketlink.idm.jpa.schema.RelationshipObject;
+import org.picketlink.idm.jpa.schema.RelationshipObjectAttribute;
+import org.picketlink.idm.model.Realm;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.Produces;
@@ -53,15 +54,18 @@ public class IDMConfiguration {
         builder
                 .stores()
                 .jpa()
-                .identityClass(User.class)
-                .credentialClass(CredentialObject.class)
-                .credentialAttributeClass(CredentialObjectAttribute.class)
+                .addRealm(Realm.DEFAULT_REALM, "default")
+                .identityClass(IdentityObject.class)
                 .attributeClass(IdentityObjectAttribute.class)
                 .relationshipClass(RelationshipObject.class)
                 .relationshipIdentityClass(RelationshipIdentityObject.class)
                 .relationshipAttributeClass(RelationshipObjectAttribute.class)
+                .credentialClass(CredentialObject.class)
+                .credentialAttributeClass(CredentialObjectAttribute.class)
                 .partitionClass(PartitionObject.class)
                 .supportAllFeatures();
+
+
 
         identityConfig = builder.build();
     }

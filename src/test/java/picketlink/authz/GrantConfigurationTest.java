@@ -17,7 +17,6 @@
 
 package picketlink.authz;
 
-import org.jboss.aerogear.security.model.AeroGearUser;
 import org.jboss.aerogear.security.picketlink.authz.GrantConfiguration;
 import org.junit.Before;
 import org.junit.Test;
@@ -25,6 +24,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.picketlink.idm.IdentityManager;
+import org.picketlink.idm.model.User;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -46,18 +46,16 @@ public class GrantConfigurationTest {
         MockitoAnnotations.initMocks(this);
     }
 
-    private AeroGearUser buildUser(String username) {
-        AeroGearUser user = mock(AeroGearUser.class);
-        when(user.getUsername()).thenReturn(username);
+    private User buildUser(String username) {
+        User user = mock(User.class);
+        when(user.getLoginName()).thenReturn(username);
         when(user.getEmail()).thenReturn(username + "@doe.com");
-        when(user.getPassword()).thenReturn("123");
         return user;
     }
 
     @Test
     public void testGrant() throws Exception {
-        AeroGearUser user = buildUser("john");
         String[] role = new String[]{"ADMIN"};
-        grantConfiguration.roles(role).to(user);
+        grantConfiguration.roles(role).to("john");
     }
 }

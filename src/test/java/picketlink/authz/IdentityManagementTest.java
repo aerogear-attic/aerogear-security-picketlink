@@ -18,7 +18,6 @@
 package picketlink.authz;
 
 import org.jboss.aerogear.security.authz.IdentityManagement;
-import org.jboss.aerogear.security.model.AeroGearUser;
 import org.jboss.aerogear.security.picketlink.authz.GrantConfiguration;
 import org.jboss.aerogear.security.picketlink.authz.IdentityManagementImpl;
 import org.junit.Before;
@@ -84,26 +83,24 @@ public class IdentityManagementTest {
 
     }
 
-    private AeroGearUser buildUser(String username) {
-        AeroGearUser user = mock(AeroGearUser.class);
-        when(user.getUsername()).thenReturn(username);
+    private User buildUser(String username) {
+        User user = mock(User.class);
+        when(user.getLoginName()).thenReturn(username);
         when(user.getEmail()).thenReturn(username + "@doe.com");
-        when(user.getPassword()).thenReturn("123");
         return user;
     }
 
     @Test
     public void testGrant() throws Exception {
-        AeroGearUser user = buildUser("john");
         String role = "ADMIN";
         when(identityManagement.grant(role)).thenReturn(grantConfiguration);
-        identityManagement.grant(role).to(user);
+        identityManagement.grant(role).to("john");
     }
 
     @Test
     public void testCreate() throws Exception {
-        AeroGearUser user = buildUser("john");
-        identityManagement.create(user);
+        User user = buildUser("john");
+        identityManagement.create(user, "123");
         org.picketlink.idm.model.User picketLinkUser = identityManager.getUser("john");
         assertNotNull("AeroGearUser should exist", picketLinkUser);
     }

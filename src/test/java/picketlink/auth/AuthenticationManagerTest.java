@@ -19,7 +19,6 @@ package picketlink.auth;
 
 import org.jboss.aerogear.security.auth.AuthenticationManager;
 import org.jboss.aerogear.security.exception.AeroGearSecurityException;
-import org.jboss.aerogear.security.model.AeroGearUser;
 import org.jboss.aerogear.security.picketlink.auth.AuthenticationManagerImpl;
 import org.junit.Before;
 import org.junit.Test;
@@ -28,6 +27,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.picketlink.Identity;
 import org.picketlink.credential.DefaultLoginCredentials;
+import org.picketlink.idm.model.User;
 
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -36,7 +36,7 @@ import static org.picketlink.Identity.AuthenticationResult;
 public class AuthenticationManagerTest {
 
     @Mock
-    private AeroGearUser user;
+    private User user;
     @Mock
     private Identity identity;
     @Mock
@@ -49,21 +49,20 @@ public class AuthenticationManagerTest {
     public void setUp() {
         authenticationManager = new AuthenticationManagerImpl();
         MockitoAnnotations.initMocks(this);
-        when(user.getUsername()).thenReturn("john");
-        when(user.getPassword()).thenReturn("123");
+        when(user.getLoginName()).thenReturn("john");
     }
 
     @Test
     public void testLogin() throws Exception {
         AuthenticationResult result = AuthenticationResult.SUCCESS;
         when(identity.login()).thenReturn(result);
-        authenticationManager.login(user);
+        authenticationManager.login(user, "123");
     }
 
     @Test(expected = AeroGearSecurityException.class)
     public void testInvalidLogin() throws Exception {
         when(identity.isLoggedIn()).thenReturn(false);
-        authenticationManager.login(user);
+        authenticationManager.login(user, "123");
     }
 
     @Test

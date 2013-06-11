@@ -20,10 +20,10 @@ package org.jboss.aerogear.security.picketlink.auth;
 import org.jboss.aerogear.security.auth.AuthenticationManager;
 import org.jboss.aerogear.security.exception.AeroGearSecurityException;
 import org.jboss.aerogear.security.exception.HttpStatus;
-import org.jboss.aerogear.security.model.AeroGearUser;
 import org.picketlink.Identity;
 import org.picketlink.credential.DefaultLoginCredentials;
 import org.picketlink.idm.credential.Password;
+import org.picketlink.idm.model.User;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -32,7 +32,7 @@ import javax.inject.Inject;
  * A <i>AuthenticationManager</i> implementation executes the basic authentication operations for {@link org.jboss.aerogear.security.model.AeroGearUser}
  */
 @ApplicationScoped
-public class AuthenticationManagerImpl implements AuthenticationManager {
+public class AuthenticationManagerImpl implements AuthenticationManager<User> {
 
     @Inject
     private Identity identity;
@@ -47,10 +47,10 @@ public class AuthenticationManagerImpl implements AuthenticationManager {
      * @throws org.jboss.aerogear.security.exception.AeroGearSecurityException
      *          on login failure.
      */
-    public boolean login(AeroGearUser user) {
+    public boolean login(User user, String password) {
 
-        credentials.setUserId(user.getUsername());
-        credentials.setCredential(new Password(user.getPassword()));
+        credentials.setUserId(user.getLoginName());
+        credentials.setCredential(new Password(password));
 
         if (identity.login() != Identity.AuthenticationResult.SUCCESS) {
             throw new AeroGearSecurityException(HttpStatus.AUTHENTICATION_FAILED);
