@@ -44,7 +44,6 @@ import java.util.Date;
  * <p>JPA {@link javax.persistence.Entity} that maps IdentityType instances.</p>
  *
  * @author <a href="mailto:psilva@redhat.com">Pedro Silva</a>
- *
  */
 @IdentityType
 @Entity

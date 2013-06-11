@@ -28,7 +28,6 @@ import java.io.Serializable;
 
 /**
  * @author <a href="mailto:psilva@redhat.com">Pedro Silva</a>
- *
  */
 @Partition
 @Entity

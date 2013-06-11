@@ -35,7 +35,6 @@ import java.io.Serializable;
  * </p>
  *
  * @author <a href="mailto:psilva@redhat.com">Pedro Silva</a>
- *
  */
 @RelationshipIdentity
 @Entity

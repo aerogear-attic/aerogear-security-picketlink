@@ -32,7 +32,6 @@ import java.io.Serializable;
 
 /**
  * @author <a href="mailto:psilva@redhat.com">Pedro Silva</a>
- *
  */
 @IdentityAttribute
 @Entity
@@ -53,7 +52,7 @@ public class IdentityObjectAttribute implements Serializable {
     private String name;
 
     @AttributeValue
-    @Column (length=1024)
+    @Column(length = 1024)
     private String value;
 
     @AttributeType

@@ -27,13 +27,14 @@ import org.picketlink.Identity;
 import org.picketlink.idm.IdentityManager;
 import org.picketlink.idm.credential.Password;
 import org.picketlink.idm.model.Attribute;
+import org.picketlink.idm.model.Role;
 import org.picketlink.idm.model.SimpleUser;
 import org.picketlink.idm.model.User;
+import org.picketlink.idm.query.IdentityQuery;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.Produces;
 import javax.inject.Inject;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -41,7 +42,7 @@ import java.util.Set;
  * <i>IdentityManagement</i> allows to assign a set of roles to {@link org.jboss.aerogear.security.model.AeroGearUser} on Identity Manager provider
  */
 @ApplicationScoped
-public class IdentityManagementImpl implements IdentityManagement {
+public class IdentityManagementImpl implements IdentityManagement<User> {
 
     private static final String IDM_SECRET_ATTRIBUTE = "serial";
 
@@ -53,7 +54,6 @@ public class IdentityManagementImpl implements IdentityManagement {
 
     @Inject
     private Identity identity;
-
 
     /**
      * This method allows to specify which <i>roles</i> must be assigned to {@link org.jboss.aerogear.security.model.AeroGearUser}
@@ -148,26 +148,19 @@ public class IdentityManagementImpl implements IdentityManagement {
         return false;
     }
 
-    //TODO Not sure if it's really necessary
     @Override
     public AeroGearUser findById(long id) throws RuntimeException {
-        return null;
+        IdentityQuery<User> query = identityManager.<User>createIdentityQuery(User.class);
+        query.setParameter(User.ID, id);
+        return (AeroGearUser) query.getResultList().get(0);
     }
 
-    //TODO Not sure if it's really necessary
     @Override
-    public List<AeroGearUser> findAllByRole(String roleName) {
-/*        Role role = identityManager.getRole(roleName);
-        List aerogearUsers = new ArrayList();
-        IdentityQuery<org.picketlink.idm.model.User> query = identityManager.createIdentityQuery(org.picketlink.idm.model.User.class);
-        query.setParameter(org.picketlink.idm.model.User.HAS_ROLE, role);
-        List<org.picketlink.idm.model.User> result = query.getResultList();
-        for (org.picketlink.idm.model.User user : result) {
-            aerogearUsers.add(Converter.convertToAerogearUser(user));
-        }
-        return aerogearUsers;*/
-        return new ArrayList<AeroGearUser>();
-
+    public List<User> findAllByRole(String name) {
+        Role role = identityManager.getRole(name);
+        IdentityQuery<User> query = identityManager.createIdentityQuery(User.class);
+        query.setParameter(User.HAS_ROLE, role);
+        return query.getResultList();
     }
 
     private boolean isLoggedIn(String username) {

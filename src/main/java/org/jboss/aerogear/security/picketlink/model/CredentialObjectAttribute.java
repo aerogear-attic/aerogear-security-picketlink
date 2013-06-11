@@ -31,7 +31,6 @@ import java.io.Serializable;
 
 /**
  * @author <a href="mailto:psilva@redhat.com">Pedro Silva</a>
- *
  */
 @CredentialAttribute
 @Entity
@@ -52,7 +51,7 @@ public class CredentialObjectAttribute implements Serializable {
     private String name;
 
     @AttributeValue
-    @Column (length=1024)
+    @Column(length = 1024)
     private String value;
 
     public Long getId() {

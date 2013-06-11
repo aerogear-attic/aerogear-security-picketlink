@@ -18,12 +18,12 @@ package org.jboss.aerogear.security.picketlink.config;
 
 import org.jboss.aerogear.security.picketlink.model.CredentialObject;
 import org.jboss.aerogear.security.picketlink.model.CredentialObjectAttribute;
-import org.jboss.aerogear.security.picketlink.model.User;
 import org.jboss.aerogear.security.picketlink.model.IdentityObjectAttribute;
 import org.jboss.aerogear.security.picketlink.model.PartitionObject;
 import org.jboss.aerogear.security.picketlink.model.RelationshipIdentityObject;
 import org.jboss.aerogear.security.picketlink.model.RelationshipObject;
 import org.jboss.aerogear.security.picketlink.model.RelationshipObjectAttribute;
+import org.jboss.aerogear.security.picketlink.model.User;
 import org.picketlink.idm.config.IdentityConfiguration;
 import org.picketlink.idm.config.IdentityConfigurationBuilder;
 

@@ -34,7 +34,6 @@ import java.util.Date;
 
 /**
  * @author <a href="mailto:psilva@redhat.com">Pedro Silva</a>
- *
  */
 @IdentityCredential
 @Entity
@@ -53,11 +52,11 @@ public class CredentialObject implements Serializable {
     private String credential;
 
     @EffectiveDate
-    @Temporal (TemporalType.TIMESTAMP)
+    @Temporal(TemporalType.TIMESTAMP)
     private Date effectiveDate;
 
     @ExpiryDate
-    @Temporal (TemporalType.TIMESTAMP)
+    @Temporal(TemporalType.TIMESTAMP)
     private Date expiryDate;
 
     @Parent
