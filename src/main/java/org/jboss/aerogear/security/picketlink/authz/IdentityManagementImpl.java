@@ -66,9 +66,9 @@ public class IdentityManagementImpl implements IdentityManagement<User> {
 
     @Override
     public User findByUsername(String username) throws RuntimeException {
-        User user = (User) identityManager.getUser(username);
+        User user = identityManager.getUser(username);
         if (user == null) {
-            throw new RuntimeException("AeroGearUser do not exist");
+            throw new RuntimeException("User do not exist");
         }
         return user;
     }
@@ -76,7 +76,7 @@ public class IdentityManagementImpl implements IdentityManagement<User> {
     @Override
     public void remove(String username) {
         if (isLoggedIn(username)) {
-            throw new RuntimeException("AeroGearUser is logged in");
+            throw new RuntimeException("User is logged in");
         }
         identityManager.remove(identityManager.getUser(username));
 

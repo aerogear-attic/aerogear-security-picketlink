@@ -46,13 +46,6 @@ public class GrantConfigurationTest {
         MockitoAnnotations.initMocks(this);
     }
 
-    private User buildUser(String username) {
-        User user = mock(User.class);
-        when(user.getLoginName()).thenReturn(username);
-        when(user.getEmail()).thenReturn(username + "@doe.com");
-        return user;
-    }
-
     @Test
     public void testGrant() throws Exception {
         String[] role = new String[]{"ADMIN"};

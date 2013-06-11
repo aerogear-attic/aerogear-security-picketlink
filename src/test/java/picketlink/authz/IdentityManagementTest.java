@@ -102,14 +102,14 @@ public class IdentityManagementTest {
         User user = buildUser("john");
         identityManagement.create(user, "123");
         org.picketlink.idm.model.User picketLinkUser = identityManager.getUser("john");
-        assertNotNull("AeroGearUser should exist", picketLinkUser);
+        assertNotNull("User should exist", picketLinkUser);
     }
 
     @Test(expected = RuntimeException.class)
     public void testRemove() throws Exception {
         identityManagement.remove("mike");
         User removedUser = (User) identityManagement.findByUsername("mike");
-        assertNull("AeroGearUser should not exist", removedUser);
+        assertNull("User should not exist", removedUser);
     }
 
     @Test
