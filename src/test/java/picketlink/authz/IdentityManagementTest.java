@@ -111,7 +111,7 @@ public class IdentityManagementTest {
     @Test(expected = RuntimeException.class)
     public void testRemove() throws Exception {
         identityManagement.remove("mike");
-        AeroGearUser removedUser = identityManagement.findByUsername("mike");
+        User removedUser = (User) identityManagement.findByUsername("mike");
         assertNull("AeroGearUser should not exist", removedUser);
     }
 

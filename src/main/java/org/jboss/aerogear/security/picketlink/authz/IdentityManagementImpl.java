@@ -67,8 +67,8 @@ public class IdentityManagementImpl implements IdentityManagement<User> {
     }
 
     @Override
-    public AeroGearUser findByUsername(String username) throws RuntimeException {
-        AeroGearUser user = (AeroGearUser) identityManager.getUser(username);
+    public User findByUsername(String username) throws RuntimeException {
+        User user = identityManager.getUser(username);
         if (user == null) {
             throw new RuntimeException("AeroGearUser do not exist");
         }
