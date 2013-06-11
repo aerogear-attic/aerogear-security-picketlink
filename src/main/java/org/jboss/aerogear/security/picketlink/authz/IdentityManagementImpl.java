@@ -37,7 +37,7 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * <i>IdentityManagement</i> allows to assign a set of roles to {@link org.jboss.aerogear.security.model.AeroGearUser} on Identity Manager provider
+ * <i>IdentityManagement</i> allows to assign a set of roles to User on Identity Manager provider
  */
 @ApplicationScoped
 public class IdentityManagementImpl implements IdentityManagement<User> {
@@ -54,10 +54,10 @@ public class IdentityManagementImpl implements IdentityManagement<User> {
     private Identity identity;
 
     /**
-     * This method allows to specify which <i>roles</i> must be assigned to {@link org.jboss.aerogear.security.model.AeroGearUser}
+     * This method allows to specify which <i>roles</i> must be assigned to User
      *
      * @param roles The list of roles.
-     * @return {@link GrantMethods} is a builder which a allows to apply a list of roles to the specified {@link org.jboss.aerogear.security.model.AeroGearUser}.
+     * @return {@link GrantMethods} is a builder which a allows to apply a list of roles to the specified User.
      */
     @Override
     public GrantMethods grant(String... roles) {
@@ -83,7 +83,7 @@ public class IdentityManagementImpl implements IdentityManagement<User> {
     }
 
     /**
-     * This method creates a new {@link org.jboss.aerogear.security.model.AeroGearUser}
+     * This method creates a new User
      *
      * @param user
      */
@@ -98,7 +98,7 @@ public class IdentityManagementImpl implements IdentityManagement<User> {
     }
 
     /**
-     * Represents the generated secret for the current {@link org.jboss.aerogear.security.model.AeroGearUser} logged in.
+     * Represents the generated secret for the current User logged in.
      */
     @Produces
     @Secret
