@@ -1,4 +1,4 @@
-/**
+/*
  * JBoss, Home of Professional Open Source
  * Copyright Red Hat, Inc., and individual contributors
  * by the @authors tag. See the copyright.txt in the distribution for a
@@ -20,19 +20,19 @@ package org.jboss.aerogear.security.picketlink.auth;
 import org.jboss.aerogear.security.auth.AuthenticationManager;
 import org.jboss.aerogear.security.exception.AeroGearSecurityException;
 import org.jboss.aerogear.security.exception.HttpStatus;
-import org.jboss.aerogear.security.model.AeroGearUser;
 import org.picketlink.Identity;
 import org.picketlink.credential.DefaultLoginCredentials;
 import org.picketlink.idm.credential.Password;
+import org.picketlink.idm.model.User;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
 /**
- * A <i>AuthenticationManager</i> implementation executes the basic authentication operations for {@link AeroGearUser}
+ * A <i>AuthenticationManager</i> implementation executes the basic authentication operations for User
  */
 @ApplicationScoped
-public class AuthenticationManagerImpl implements AuthenticationManager {
+public class AuthenticationManagerImpl implements AuthenticationManager<User> {
 
     @Inject
     private Identity identity;
@@ -41,17 +41,16 @@ public class AuthenticationManagerImpl implements AuthenticationManager {
     private DefaultLoginCredentials credentials;
 
     /**
-     * Logs in the specified {@link AeroGearUser}.
+     * Logs in the specified User.
      *
-     * @param aeroGearUser represents a simple implementation that holds user's credentials.
+     * @param user represents a simple implementation that holds user's credentials.
      * @throws org.jboss.aerogear.security.exception.AeroGearSecurityException
      *          on login failure.
      */
-    public boolean login(AeroGearUser aeroGearUser) {
+    public boolean login(User user, String password) {
 
-        credentials.setUserId(aeroGearUser.getUsername());
-        credentials.setCredential(new Password(aeroGearUser.getPassword()));
-
+        credentials.setUserId(user.getLoginName());
+        credentials.setCredential(new Password(password));
 
         if (identity.login() != Identity.AuthenticationResult.SUCCESS) {
             throw new AeroGearSecurityException(HttpStatus.AUTHENTICATION_FAILED);
@@ -61,7 +60,7 @@ public class AuthenticationManagerImpl implements AuthenticationManager {
     }
 
     /**
-     * Logs out the specified {@link AeroGearUser} from the system.
+     * Logs out the specified User from the system.
      *
      * @throws org.jboss.aerogear.security.exception.AeroGearSecurityException
      *          on logout failure.

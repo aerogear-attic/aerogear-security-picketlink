@@ -1,4 +1,4 @@
-/**
+/*
  * JBoss, Home of Professional Open Source
  * Copyright Red Hat, Inc., and individual contributors
  * by the @authors tag. See the copyright.txt in the distribution for a
@@ -19,47 +19,56 @@ package picketlink.auth;
 
 import org.jboss.aerogear.security.auth.AuthenticationManager;
 import org.jboss.aerogear.security.exception.AeroGearSecurityException;
-import org.jboss.aerogear.security.model.AeroGearUser;
 import org.jboss.aerogear.security.picketlink.auth.AuthenticationManagerImpl;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.picketlink.Identity;
+import org.picketlink.credential.DefaultLoginCredentials;
+import org.picketlink.idm.model.User;
 
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.picketlink.Identity.AuthenticationResult;
 
 public class AuthenticationManagerTest {
 
     @Mock
-    private AeroGearUser aeroGearUser;
+    private User user;
     @Mock
-    private Identity picketBoxIdentity;
+    private Identity identity;
+    @Mock
+    private DefaultLoginCredentials credentials;
 
     @InjectMocks
-    private AuthenticationManager authenticationManager = new AuthenticationManagerImpl();
+    private AuthenticationManager authenticationManager;
 
     @Before
     public void setUp() {
+        authenticationManager = new AuthenticationManagerImpl();
         MockitoAnnotations.initMocks(this);
-        when(aeroGearUser.getUsername()).thenReturn("john");
-        when(aeroGearUser.getPassword()).thenReturn("123");
+        when(user.getLoginName()).thenReturn("john");
     }
 
-    @Ignore
+    @Test
+    public void testLogin() throws Exception {
+        AuthenticationResult result = AuthenticationResult.SUCCESS;
+        when(identity.login()).thenReturn(result);
+        authenticationManager.login(user, "123");
+    }
+
     @Test(expected = AeroGearSecurityException.class)
     public void testInvalidLogin() throws Exception {
-        when(picketBoxIdentity.isLoggedIn()).thenReturn(false);
-        authenticationManager.login(aeroGearUser);
+        when(identity.isLoggedIn()).thenReturn(false);
+        authenticationManager.login(user, "123");
     }
 
     @Test
     public void testLogout() throws Exception {
-        when(picketBoxIdentity.isLoggedIn()).thenReturn(true);
+        when(identity.isLoggedIn()).thenReturn(true);
         authenticationManager.logout();
-        verify(picketBoxIdentity).logout();
+        verify(identity).logout();
     }
 }

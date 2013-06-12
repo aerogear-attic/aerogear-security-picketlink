@@ -1,4 +1,4 @@
-/**
+/*
  * JBoss, Home of Professional Open Source
  * Copyright Red Hat, Inc., and individual contributors
  * by the @authors tag. See the copyright.txt in the distribution for a
@@ -18,27 +18,31 @@
 package org.jboss.aerogear.security.picketlink.authz;
 
 
+import org.jboss.aerogear.security.auth.LoggedUser;
+import org.jboss.aerogear.security.auth.Secret;
 import org.jboss.aerogear.security.authz.IdentityManagement;
-import org.jboss.aerogear.security.model.AeroGearUser;
-import org.jboss.aerogear.security.picketlink.util.Converter;
+import org.jboss.aerogear.security.otp.api.Base32;
 import org.picketlink.Identity;
 import org.picketlink.idm.IdentityManager;
 import org.picketlink.idm.credential.Password;
+import org.picketlink.idm.model.Attribute;
 import org.picketlink.idm.model.Role;
-import org.picketlink.idm.model.SimpleUser;
 import org.picketlink.idm.model.User;
 import org.picketlink.idm.query.IdentityQuery;
 
 import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.inject.Produces;
 import javax.inject.Inject;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 /**
- * <i>IdentityManagement</i> allows to assign a set of roles to {@link org.jboss.aerogear.security.model.AeroGearUser} on Identity Manager provider
+ * <i>IdentityManagement</i> allows to assign a set of roles to User on Identity Manager provider
  */
 @ApplicationScoped
-public class IdentityManagementImpl implements IdentityManagement {
+public class IdentityManagementImpl implements IdentityManagement<User> {
+
+    private static final String IDM_SECRET_ATTRIBUTE = "serial";
 
     @Inject
     private IdentityManager identityManager;
@@ -50,10 +54,10 @@ public class IdentityManagementImpl implements IdentityManagement {
     private Identity identity;
 
     /**
-     * This method allows to specify which <i>roles</i> must be assigned to {@link org.jboss.aerogear.security.model.AeroGearUser}
+     * This method allows to specify which <i>roles</i> must be assigned to User
      *
      * @param roles The list of roles.
-     * @return {@link GrantMethods} is a builder which a allows to apply a list of roles to the specified {@link org.jboss.aerogear.security.model.AeroGearUser}.
+     * @return {@link GrantMethods} is a builder which a allows to apply a list of roles to the specified User.
      */
     @Override
     public GrantMethods grant(String... roles) {
@@ -61,56 +65,97 @@ public class IdentityManagementImpl implements IdentityManagement {
     }
 
     @Override
-    public AeroGearUser get(String id) throws RuntimeException {
-        User user = identityManager.getUser(id);
+    public User findByUsername(String username) throws RuntimeException {
+        User user = identityManager.getUser(username);
         if (user == null) {
             throw new RuntimeException("User do not exist");
         }
-        return Converter.convertToAerogearUser(identityManager.getUser(id));
+        return user;
     }
 
     @Override
-    public void remove(AeroGearUser aeroGearUser) {
-
-        if (isLoggedIn(aeroGearUser)) {
+    public void remove(String username) {
+        if (isLoggedIn(username)) {
             throw new RuntimeException("User is logged in");
         }
-        identityManager.remove(identityManager.getUser(aeroGearUser.getUsername()));
-    }
+        identityManager.remove(identityManager.getUser(username));
 
-    @Override
-    public List<AeroGearUser> findAllByRole(String roleName) {
-        Role role = identityManager.getRole(roleName);
-        List aerogearUsers = new ArrayList();
-        IdentityQuery<User> query = identityManager.createIdentityQuery(User.class);
-        query.setParameter(User.HAS_ROLE, role);
-        List<User> result = query.getResultList();
-        for (User user : result) {
-            aerogearUsers.add(Converter.convertToAerogearUser(user));
-        }
-        return aerogearUsers;
     }
 
     /**
-     * This method creates a new {@link AeroGearUser}
+     * This method creates a new User
      *
-     * @param aeroGearUser
+     * @param user
      */
     @Override
-    public void create(AeroGearUser aeroGearUser) {
-        User picketLinkUser = new SimpleUser(aeroGearUser.getUsername());
-        picketLinkUser.setEmail(aeroGearUser.getEmail());
-        picketLinkUser.setFirstName(aeroGearUser.getFirstName());
-        picketLinkUser.setLastName(aeroGearUser.getLastName());
-        identityManager.add(picketLinkUser);
-        /*
-         * Disclaimer: PlainTextPassword will encode passwords in SHA-512 with SecureRandom-1024 salt
-         * See http://lists.jboss.org/pipermail/security-dev/2013-January/000650.html for more information
-         */
-        identityManager.updateCredential(picketLinkUser, new Password(aeroGearUser.getPassword()));
+    public void create(User user, String password) {
+        identityManager.add(user);
+        identityManager.updateCredential(user, new Password(password));
     }
 
-    private boolean isLoggedIn(AeroGearUser aeroGearUser) {
-        return identity.isLoggedIn() && identity.getAgent().getLoginName().equals(aeroGearUser.getUsername());
+    /**
+     * Represents the generated secret for the current User logged in.
+     */
+    @Produces
+    @Secret
+    public String getSecret() {
+
+        User user = (User) identity.getAgent();
+
+        Attribute<String> secret = user.getAttribute(IDM_SECRET_ATTRIBUTE);
+
+        if (secret == null) {
+            secret = new Attribute<String>(IDM_SECRET_ATTRIBUTE, Base32.random());
+            user.setAttribute(secret);
+            this.identityManager.update(user);
+        }
+        return secret.getValue();
+    }
+
+    @Produces
+    @LoggedUser
+    public String getLogin() {
+        String id = null;
+        if (identity.isLoggedIn()) {
+            id = identity.getAgent().getLoginName();
+        }
+        return id;
+    }
+
+    /**
+     * Role validation against the IDM
+     *
+     * @param roles roles to be checked
+     * @return returns true if the current logged in has roles at the IDM, false otherwise
+     */
+    @Override
+    public boolean hasRoles(Set<String> roles) {
+        if (identity.isLoggedIn()) {
+            for (String role : roles) {
+                if (identityManager.hasRole(identity.getAgent(), identityManager.getRole(role))) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public User findById(long id) throws RuntimeException {
+        IdentityQuery<User> query = identityManager.createIdentityQuery(User.class);
+        query.setParameter(User.ID, id);
+        return query.getResultList().get(0);
+    }
+
+    @Override
+    public List<User> findAllByRole(String name) {
+        Role role = identityManager.getRole(name);
+        IdentityQuery<User> query = identityManager.createIdentityQuery(User.class);
+        query.setParameter(User.HAS_ROLE, role);
+        return query.getResultList();
+    }
+
+    private boolean isLoggedIn(String username) {
+        return identity.isLoggedIn() && identity.getAgent().getLoginName().equals(username);
     }
 }

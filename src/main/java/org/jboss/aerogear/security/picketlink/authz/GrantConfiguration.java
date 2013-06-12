@@ -1,4 +1,4 @@
-/**
+/*
  * JBoss, Home of Professional Open Source
  * Copyright Red Hat, Inc., and individual contributors
  * by the @authors tag. See the copyright.txt in the distribution for a
@@ -18,7 +18,6 @@
 package org.jboss.aerogear.security.picketlink.authz;
 
 import org.jboss.aerogear.security.authz.IdentityManagement;
-import org.jboss.aerogear.security.model.AeroGearUser;
 import org.picketlink.idm.IdentityManager;
 import org.picketlink.idm.model.Role;
 import org.picketlink.idm.model.SimpleRole;
@@ -30,10 +29,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * <i>GrantMethods</i> implementation is a builder to apply roles to {@link AeroGearUser}
+ * <i>GrantMethods</i> implementation is a builder to apply roles to User
  */
 @ApplicationScoped
-public class GrantConfiguration implements IdentityManagement.GrantMethods {
+public class GrantConfiguration implements IdentityManagement.GrantMethods<User> {
 
     @Inject
     private IdentityManager identityManager;
@@ -41,7 +40,7 @@ public class GrantConfiguration implements IdentityManagement.GrantMethods {
     private List<Role> list;
 
     /**
-     * This method specifies which roles will be applied to {@link AeroGearUser}
+     * This method specifies which roles will be applied to User
      *
      * @param roles Array of roles
      * @return builder implementation
@@ -62,12 +61,12 @@ public class GrantConfiguration implements IdentityManagement.GrantMethods {
     /**
      * This method applies roles specified on {@link IdentityManagement#grant(String...)}
      *
-     * @param aeroGearUser represents a simple user's implementation to hold credentials.
+     * @param username represents a simple user's implementation to hold credentials.
      */
     @Override
-    public void to(AeroGearUser aeroGearUser) {
+    public void to(String username) {
 
-        User picketLinkUser = identityManager.getUser(aeroGearUser.getUsername());
+        org.picketlink.idm.model.User picketLinkUser = identityManager.getUser(username);
 
         for (Role role : list) {
             identityManager.grantRole(picketLinkUser, role);

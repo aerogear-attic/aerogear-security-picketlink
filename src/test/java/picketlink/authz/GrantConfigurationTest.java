@@ -1,4 +1,4 @@
-/**
+/*
  * JBoss, Home of Professional Open Source
  * Copyright Red Hat, Inc., and individual contributors
  * by the @authors tag. See the copyright.txt in the distribution for a
@@ -17,7 +17,6 @@
 
 package picketlink.authz;
 
-import org.jboss.aerogear.security.model.AeroGearUser;
 import org.jboss.aerogear.security.picketlink.authz.GrantConfiguration;
 import org.junit.Before;
 import org.junit.Test;
@@ -27,13 +26,16 @@ import org.mockito.MockitoAnnotations;
 import org.picketlink.idm.IdentityManager;
 import org.picketlink.idm.model.User;
 
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
 public class GrantConfigurationTest {
 
     @Mock
     private IdentityManager manager;
 
     @Mock
-    private User user;
+    private org.picketlink.idm.model.User user;
 
     @InjectMocks
     private GrantConfiguration grantConfiguration;
@@ -44,18 +46,9 @@ public class GrantConfigurationTest {
         MockitoAnnotations.initMocks(this);
     }
 
-    private AeroGearUser buildUser(String username) {
-        AeroGearUser aeroGearUser = new AeroGearUser();
-        aeroGearUser.setUsername(username);
-        aeroGearUser.setEmail(username + "@doe.com");
-        aeroGearUser.setPassword("123");
-        return aeroGearUser;
-    }
-
     @Test
     public void testGrant() throws Exception {
-        AeroGearUser aeroGearUser = buildUser("john");
         String[] role = new String[]{"ADMIN"};
-        grantConfiguration.roles(role).to(aeroGearUser);
+        grantConfiguration.roles(role).to("john");
     }
 }
