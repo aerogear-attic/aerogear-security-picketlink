@@ -90,10 +90,6 @@ public class IdentityManagementImpl implements IdentityManagement<User> {
     @Override
     public void create(User user, String password) {
         identityManager.add(user);
-        /*
-         * Disclaimer: PlainTextPassword will encode passwords in SHA-512 with SecureRandom-1024 salt
-         * See http://lists.jboss.org/pipermail/security-dev/2013-January/000650.html for more information
-         */
         identityManager.updateCredential(user, new Password(password));
     }
 
