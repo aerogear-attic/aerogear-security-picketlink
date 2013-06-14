@@ -56,7 +56,7 @@ public class AuthenticationManagerImpl implements AuthenticationManager<User> {
             throw new AeroGearSecurityException(HttpStatus.AUTHENTICATION_FAILED);
         }
 
-        return false;
+        return true;
     }
 
     /**
