@@ -29,6 +29,7 @@ import org.picketlink.Identity;
 import org.picketlink.credential.DefaultLoginCredentials;
 import org.picketlink.idm.model.User;
 
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.picketlink.Identity.AuthenticationResult;
@@ -56,7 +57,8 @@ public class AuthenticationManagerTest {
     public void testLogin() throws Exception {
         AuthenticationResult result = AuthenticationResult.SUCCESS;
         when(identity.login()).thenReturn(result);
-        authenticationManager.login(user, "123");
+        boolean status = authenticationManager.login(user, "123");
+        assertTrue("Login result should return true", status);
     }
 
     @Test(expected = AeroGearSecurityException.class)
