@@ -5,7 +5,7 @@
         <dependency>
              <groupId>org.jboss.aerogear</groupId>
              <artifactId>aerogear-security-picketlink</artifactId>
-             <version>1.0.0.CR1</version>
+             <version>1.1.0</version>
              <scope>compile</scope>
         </dependency>
 
