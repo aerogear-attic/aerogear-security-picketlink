@@ -132,7 +132,8 @@ public class IdentityManagementImpl implements IdentityManagement<User> {
     public boolean hasRoles(Set<String> roles) {
         if (identity.isLoggedIn()) {
             for (String role : roles) {
-                if (identityManager.hasRole(identity.getAgent(), identityManager.getRole(role))) {
+                Role retrievedRole = identityManager.getRole(role);
+                if (retrievedRole != null && identityManager.hasRole(identity.getAgent(), retrievedRole)) {
                     return true;
                 }
             }
