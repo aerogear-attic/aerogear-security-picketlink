@@ -123,7 +123,7 @@ public class IdentityManagementImpl implements IdentityManagement<User> {
     public String getLogin() {
         String id = null;
         if (identity.isLoggedIn()) {
-            id = identity.getAccount().getId();
+            id = ((User) identity.getAccount()).getLoginName();
         }
         return id;
     }
