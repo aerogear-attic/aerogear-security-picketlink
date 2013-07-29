@@ -24,10 +24,13 @@ import org.jboss.aerogear.security.authz.IdentityManagement;
 import org.jboss.aerogear.security.otp.api.Base32;
 import org.picketlink.Identity;
 import org.picketlink.idm.IdentityManager;
+import org.picketlink.idm.PartitionManager;
 import org.picketlink.idm.credential.Password;
 import org.picketlink.idm.model.Attribute;
-import org.picketlink.idm.model.Role;
-import org.picketlink.idm.model.User;
+import org.picketlink.idm.model.sample.GroupRole;
+import org.picketlink.idm.model.sample.Role;
+import org.picketlink.idm.model.sample.SampleModel;
+import org.picketlink.idm.model.sample.User;
 import org.picketlink.idm.query.IdentityQuery;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -53,6 +56,9 @@ public class IdentityManagementImpl implements IdentityManagement<User> {
     @Inject
     private Identity identity;
 
+    @Inject
+    private PartitionManager partitionManager;
+
     /**
      * This method allows to specify which <i>roles</i> must be assigned to User
      *
@@ -66,7 +72,7 @@ public class IdentityManagementImpl implements IdentityManagement<User> {
 
     @Override
     public User findByUsername(String username) throws RuntimeException {
-        User user = identityManager.getUser(username);
+        User user = SampleModel.getUser(identityManager, username);
         if (user == null) {
             throw new RuntimeException("User do not exist");
         }
@@ -78,7 +84,7 @@ public class IdentityManagementImpl implements IdentityManagement<User> {
         if (isLoggedIn(username)) {
             throw new RuntimeException("User is logged in");
         }
-        identityManager.remove(identityManager.getUser(username));
+        identityManager.remove(SampleModel.getUser(identityManager, username));
 
     }
 
@@ -100,7 +106,7 @@ public class IdentityManagementImpl implements IdentityManagement<User> {
     @Secret
     public String getSecret() {
 
-        User user = (User) identity.getAgent();
+        User user = (User) identity.getAccount();
 
         Attribute<String> secret = user.getAttribute(IDM_SECRET_ATTRIBUTE);
 
@@ -117,7 +123,7 @@ public class IdentityManagementImpl implements IdentityManagement<User> {
     public String getLogin() {
         String id = null;
         if (identity.isLoggedIn()) {
-            id = identity.getAgent().getLoginName();
+            id = identity.getAccount().getId();
         }
         return id;
     }
@@ -132,8 +138,8 @@ public class IdentityManagementImpl implements IdentityManagement<User> {
     public boolean hasRoles(Set<String> roles) {
         if (identity.isLoggedIn()) {
             for (String role : roles) {
-                Role retrievedRole = identityManager.getRole(role);
-                if (retrievedRole != null && identityManager.hasRole(identity.getAgent(), retrievedRole)) {
+                Role retrievedRole = SampleModel.getRole(identityManager, role);
+                if (retrievedRole != null && SampleModel.hasRole(partitionManager.createRelationshipManager(), identity.getAccount(), retrievedRole)) {
                     return true;
                 }
             }
@@ -150,13 +156,13 @@ public class IdentityManagementImpl implements IdentityManagement<User> {
 
     @Override
     public List<User> findAllByRole(String name) {
-        Role role = identityManager.getRole(name);
+        Role role = SampleModel.getRole(identityManager, name);
         IdentityQuery<User> query = identityManager.createIdentityQuery(User.class);
-        query.setParameter(User.HAS_ROLE, role);
+        query.setParameter(GroupRole.ROLE, role);
         return query.getResultList();
     }
 
     private boolean isLoggedIn(String username) {
-        return identity.isLoggedIn() && identity.getAgent().getLoginName().equals(username);
+        return identity.isLoggedIn() && identity.getAccount().getId().equals(username);
     }
 }

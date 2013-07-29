@@ -19,9 +19,10 @@ package org.jboss.aerogear.security.picketlink.authz;
 
 import org.jboss.aerogear.security.authz.IdentityManagement;
 import org.picketlink.idm.IdentityManager;
-import org.picketlink.idm.model.Role;
-import org.picketlink.idm.model.SimpleRole;
-import org.picketlink.idm.model.User;
+import org.picketlink.idm.PartitionManager;
+import org.picketlink.idm.model.sample.Role;
+import org.picketlink.idm.model.sample.SampleModel;
+import org.picketlink.idm.model.sample.User;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -37,6 +38,9 @@ public class GrantConfiguration implements IdentityManagement.GrantMethods<User>
     @Inject
     private IdentityManager identityManager;
 
+    @Inject
+    private PartitionManager partitionManager;
+
     private List<Role> list;
 
     /**
@@ -48,9 +52,9 @@ public class GrantConfiguration implements IdentityManagement.GrantMethods<User>
     public GrantConfiguration roles(String[] roles) {
         list = new ArrayList<Role>();
         for (String role : roles) {
-            Role newRole = identityManager.getRole(role);
+            Role newRole = SampleModel.getRole(identityManager, role);
             if (newRole == null) {
-                newRole = new SimpleRole(role);
+                newRole = new Role(role);
                 identityManager.add(newRole);
             }
             list.add(newRole);
@@ -66,10 +70,10 @@ public class GrantConfiguration implements IdentityManagement.GrantMethods<User>
     @Override
     public void to(String username) {
 
-        org.picketlink.idm.model.User picketLinkUser = identityManager.getUser(username);
+        User picketLinkUser = SampleModel.getUser(identityManager, username);
 
         for (Role role : list) {
-            identityManager.grantRole(picketLinkUser, role);
+            SampleModel.grantRole(partitionManager.createRelationshipManager(), picketLinkUser, role);
         }
 
     }
