@@ -22,11 +22,15 @@ import org.jboss.aerogear.security.exception.AeroGearSecurityException;
 import org.jboss.aerogear.security.exception.HttpStatus;
 import org.picketlink.Identity;
 import org.picketlink.credential.DefaultLoginCredentials;
+import org.picketlink.idm.IdentityManager;
+import org.picketlink.idm.credential.Credentials;
+import static org.picketlink.idm.credential.Credentials.Status.EXPIRED;
 import org.picketlink.idm.credential.Password;
 import org.picketlink.idm.model.sample.User;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
+import java.util.logging.Logger;
 
 /**
  * A <i>AuthenticationManager</i> implementation executes the basic authentication operations for User
@@ -34,11 +38,15 @@ import javax.inject.Inject;
 @ApplicationScoped
 public class AuthenticationManagerImpl implements AuthenticationManager<User> {
 
+    private static final Logger LOGGER = Logger.getLogger(AuthenticationManagerImpl.class.getSimpleName());
     @Inject
     private Identity identity;
 
     @Inject
     private DefaultLoginCredentials credentials;
+
+    @Inject
+    private IdentityManager identityManager;
 
     /**
      * Logs in the specified User.
@@ -51,8 +59,8 @@ public class AuthenticationManagerImpl implements AuthenticationManager<User> {
 
         credentials.setUserId(user.getLoginName());
         credentials.setCredential(new Password(password));
-
-        if (identity.login() != Identity.AuthenticationResult.SUCCESS) {
+        if (identity.login() != Identity.AuthenticationResult.SUCCESS
+                || isCredentialExpired(user.getLoginName(), password)) {
             throw new AeroGearSecurityException(HttpStatus.AUTHENTICATION_FAILED);
         }
 
@@ -75,6 +83,12 @@ public class AuthenticationManagerImpl implements AuthenticationManager<User> {
     private void onAuthenticationFailure() {
         if (!identity.isLoggedIn())
             throw new AeroGearSecurityException(HttpStatus.AUTHENTICATION_FAILED);
+    }
+
+    private boolean isCredentialExpired(String loginName, String password) {
+        Credentials c = new UsernamePasswordCredentials(loginName, new Password(password));
+        identityManager.validateCredentials(c);
+        return c.getStatus().equals(EXPIRED);
     }
 
 }

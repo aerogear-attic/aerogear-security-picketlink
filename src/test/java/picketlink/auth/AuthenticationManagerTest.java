@@ -28,6 +28,7 @@ import org.mockito.MockitoAnnotations;
 import org.picketlink.Identity;
 import org.picketlink.credential.DefaultLoginCredentials;
 import org.picketlink.idm.model.sample.User;
+import org.picketlink.idm.credential.Credentials;
 
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.verify;
@@ -42,6 +43,8 @@ public class AuthenticationManagerTest {
     private Identity identity;
     @Mock
     private DefaultLoginCredentials credentials;
+    @Mock
+    private IdentityManager identityManager;
 
     @InjectMocks
     private AuthenticationManager authenticationManager;
@@ -64,6 +67,7 @@ public class AuthenticationManagerTest {
     @Test(expected = AeroGearSecurityException.class)
     public void testInvalidLogin() throws Exception {
         when(identity.isLoggedIn()).thenReturn(false);
+        when(credentials.getStatus()).thenReturn(Credentials.Status.EXPIRED);
         authenticationManager.login(user, "123");
     }
 
