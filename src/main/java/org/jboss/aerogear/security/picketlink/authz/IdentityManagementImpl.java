@@ -17,7 +17,6 @@
 
 package org.jboss.aerogear.security.picketlink.authz;
 
-
 import org.jboss.aerogear.security.auth.LoggedUser;
 import org.jboss.aerogear.security.auth.Secret;
 import org.jboss.aerogear.security.authz.IdentityManagement;
