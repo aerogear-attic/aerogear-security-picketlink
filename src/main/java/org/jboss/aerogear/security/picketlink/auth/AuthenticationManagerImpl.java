@@ -24,7 +24,6 @@ import org.picketlink.Identity;
 import org.picketlink.credential.DefaultLoginCredentials;
 import org.picketlink.idm.IdentityManager;
 import org.picketlink.idm.credential.Credentials;
-import static org.picketlink.idm.credential.Credentials.Status.EXPIRED;
 import org.picketlink.idm.credential.Password;
 import org.picketlink.idm.credential.UsernamePasswordCredentials;
 import org.picketlink.idm.model.User;
@@ -32,6 +31,8 @@ import org.picketlink.idm.model.User;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import java.util.logging.Logger;
+
+import static org.picketlink.idm.credential.Credentials.Status.EXPIRED;
 
 /**
  * A <i>AuthenticationManager</i> implementation executes the basic authentication operations for User
