@@ -63,6 +63,17 @@ public class IdentityManagementImpl implements IdentityManagement<User> {
         return grantConfiguration.roles(roles);
     }
 
+    /**
+     * This method allows to revoke which <i>roles</i> must be revoked to User
+     *
+     * @param roles The list of roles.
+     * @return {@link GrantMethods} is a builder which a allows to revoke a list of roles to the specified User.
+     */
+    @Override
+    public GrantMethods revoke(String... roles) {
+        return grantConfiguration.revoke(roles);
+    }
+
     @Override
     public User findByUsername(String username) throws RuntimeException {
         User user = identityManager.getUser(username);
