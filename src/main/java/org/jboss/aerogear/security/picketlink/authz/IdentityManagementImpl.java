@@ -20,12 +20,16 @@ package org.jboss.aerogear.security.picketlink.authz;
 import org.jboss.aerogear.security.auth.LoggedUser;
 import org.jboss.aerogear.security.auth.Secret;
 import org.jboss.aerogear.security.authz.IdentityManagement;
+import org.jboss.aerogear.security.exception.AeroGearSecurityException;
+import org.jboss.aerogear.security.exception.HttpStatus;
 import org.jboss.aerogear.security.otp.api.Base32;
+import org.jboss.aerogear.security.picketlink.auth.CredentialMatcher;
 import org.picketlink.Identity;
 import org.picketlink.idm.IdentityManager;
 import org.picketlink.idm.credential.Password;
 import org.picketlink.idm.model.Attribute;
 import org.picketlink.idm.model.Role;
+import org.picketlink.idm.model.SimpleUser;
 import org.picketlink.idm.model.User;
 import org.picketlink.idm.query.IdentityQuery;
 
@@ -44,10 +48,13 @@ public class IdentityManagementImpl implements IdentityManagement<User> {
     private static final String IDM_SECRET_ATTRIBUTE = "serial";
 
     @Inject
-    private IdentityManager identityManager;
+    private CredentialMatcher credentialMatcher;
 
     @Inject
     private GrantConfiguration grantConfiguration;
+
+    @Inject
+    private IdentityManager identityManager;
 
     @Inject
     private Identity identity;
@@ -61,6 +68,19 @@ public class IdentityManagementImpl implements IdentityManagement<User> {
     @Override
     public GrantMethods grant(String... roles) {
         return grantConfiguration.roles(roles);
+    }
+
+    @Override
+    public void reset(User loggedIn, String currentPassword, String newPassword) {
+
+        credentialMatcher.match(loggedIn.getLoginName(), currentPassword);
+
+        if (credentialMatcher.hasExpired() || credentialMatcher.isValid()) {
+            SimpleUser user = (SimpleUser) findByUsername(loggedIn.getLoginName());
+            this.identityManager.updateCredential(user, new Password(newPassword));
+        } else {
+            throw new AeroGearSecurityException(HttpStatus.PASSWORD_RESET_FAILED);
+        }
     }
 
     /**
@@ -78,7 +98,7 @@ public class IdentityManagementImpl implements IdentityManagement<User> {
     public User findByUsername(String username) throws RuntimeException {
         User user = identityManager.getUser(username);
         if (user == null) {
-            throw new RuntimeException("User do not exist");
+            throw new AeroGearSecurityException(HttpStatus.CREDENTIAL_NOT_FOUND);
         }
         return user;
     }
@@ -86,7 +106,7 @@ public class IdentityManagementImpl implements IdentityManagement<User> {
     @Override
     public void remove(String username) {
         if (isLoggedIn(username)) {
-            throw new RuntimeException("User is logged in");
+            throw new AeroGearSecurityException(HttpStatus.ALREADY_LOGGED_IN);
         }
         identityManager.remove(identityManager.getUser(username));
 
