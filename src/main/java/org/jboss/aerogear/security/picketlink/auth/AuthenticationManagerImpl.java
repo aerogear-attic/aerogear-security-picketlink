@@ -40,7 +40,6 @@ import static org.picketlink.idm.credential.Credentials.Status.EXPIRED;
 @ApplicationScoped
 public class AuthenticationManagerImpl implements AuthenticationManager<User> {
 
-    private static final Logger LOGGER = Logger.getLogger(AuthenticationManagerImpl.class.getSimpleName());
     @Inject
     private Identity identity;
 
@@ -49,6 +48,9 @@ public class AuthenticationManagerImpl implements AuthenticationManager<User> {
 
     @Inject
     private IdentityManager identityManager;
+
+    @Inject
+    private CredentialMatcher credentialMatcher;
 
     /**
      * Logs in the specified User.
@@ -61,8 +63,11 @@ public class AuthenticationManagerImpl implements AuthenticationManager<User> {
 
         credentials.setUserId(user.getLoginName());
         credentials.setCredential(new Password(password));
+
+        credentialMatcher.match(user.getLoginName(), password);
+
         if (identity.login() != Identity.AuthenticationResult.SUCCESS
-                || isCredentialExpired(user.getLoginName(), password)) {
+                || !credentialMatcher.isValid()) {
             throw new AeroGearSecurityException(HttpStatus.AUTHENTICATION_FAILED);
         }
 
@@ -86,11 +91,4 @@ public class AuthenticationManagerImpl implements AuthenticationManager<User> {
         if (!identity.isLoggedIn())
             throw new AeroGearSecurityException(HttpStatus.AUTHENTICATION_FAILED);
     }
-
-    private boolean isCredentialExpired(String loginName, String password) {
-        Credentials c = new UsernamePasswordCredentials(loginName, new Password(password));
-        identityManager.validateCredentials(c);
-        return c.getStatus().equals(EXPIRED);
-    }
-
 }
