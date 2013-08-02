@@ -68,6 +68,7 @@ public class GrantConfiguration implements IdentityManagement.GrantMethods<User>
 
     /**
      * This method allows to revoke which <i>roles</i> must be revoked to User
+     * @param roles List of roles to be revoked
      */
     @Override
     public GrantConfiguration revoke(String... roles) {
