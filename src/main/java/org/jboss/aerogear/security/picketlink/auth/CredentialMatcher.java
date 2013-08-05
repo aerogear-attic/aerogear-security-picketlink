@@ -21,45 +21,51 @@ import org.picketlink.idm.IdentityManager;
 import org.picketlink.idm.credential.Credentials;
 import org.picketlink.idm.credential.Password;
 import org.picketlink.idm.credential.UsernamePasswordCredentials;
+import org.picketlink.idm.model.User;
 
+import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
 /**
  * Responsible for matching credentials against the IDM
  */
+
+@ApplicationScoped
 public class CredentialMatcher {
 
     @Inject
     private IdentityManager identityManager;
+
     private Credentials credential;
 
     /**
      * Check if the credential is valid
+     *
      * @return boolean
      */
-    public boolean isValid(){
+    public boolean isValid() {
         return credential.getStatus().equals(Credentials.Status.VALID);
     }
 
     /**
      * Check if the credential has already expired
+     *
      * @return boolean
      */
-    public boolean hasExpired(){
+    public boolean hasExpired() {
         return credential.getStatus().equals(Credentials.Status.EXPIRED);
     }
 
     /**
      * Validate if the credential provided matches
-     * @param loginName
+     *
+     * @param user
      * @param password
      * @return builder implementation
      */
-    public CredentialMatcher match(String loginName, String password) {
-        Credentials credential = new UsernamePasswordCredentials(loginName, new Password(password));
+    public void validate(User user, String password) {
+        Credentials credential = new UsernamePasswordCredentials(user.getLoginName(), new Password(password));
         identityManager.validateCredentials(credential);
         this.credential = credential;
-        return this;
     }
 }
-
