@@ -29,7 +29,6 @@ import org.mockito.MockitoAnnotations;
 import org.picketlink.Identity;
 import org.picketlink.credential.DefaultLoginCredentials;
 import org.picketlink.idm.model.sample.User;
-import org.picketlink.idm.credential.Credentials;
 
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.verify;

@@ -47,7 +47,7 @@ public class GrantConfigurationTest {
     @Test
     @Ignore
     public void testGrant() throws Exception {
-        String[] role = new String[] { "ADMIN" };
+        String[] role = new String[]{"ADMIN"};
         grantConfiguration.roles(role).to("john");
     }
 }
