@@ -61,7 +61,9 @@ public class AuthenticationManagerImpl implements AuthenticationManager<User> {
 
         credentialMatcher.validate(user, password);
 
-        if (identity.login() != Identity.AuthenticationResult.SUCCESS) {
+        if (credentialMatcher.hasExpired()) {
+            throw new AeroGearSecurityException(HttpStatus.CREDENTIAL_HAS_EXPIRED);
+        } else if (identity.login() != Identity.AuthenticationResult.SUCCESS) {
             throw new AeroGearSecurityException(HttpStatus.AUTHENTICATION_FAILED);
         }
 
