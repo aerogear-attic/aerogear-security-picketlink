@@ -21,7 +21,7 @@ import org.picketlink.idm.IdentityManager;
 import org.picketlink.idm.credential.Credentials;
 import org.picketlink.idm.credential.Password;
 import org.picketlink.idm.credential.UsernamePasswordCredentials;
-import org.picketlink.idm.model.User;
+import org.picketlink.idm.model.sample.User;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;

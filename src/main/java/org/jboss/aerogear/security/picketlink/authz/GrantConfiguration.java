@@ -76,8 +76,9 @@ public class GrantConfiguration implements IdentityManagement.GrantMethods<User>
         list = new ArrayList<Role>();
         if (identity.isLoggedIn()) {
             for (String role : roles) {
-                Role retrievedRole = identityManager.getRole(role);
-                if (retrievedRole != null && identityManager.hasRole(identity.getAgent(), retrievedRole)) {
+                Role retrievedRole = SampleModel.getRole(identityManager, role);
+                if (retrievedRole != null && SampleModel.hasRole(partitionManager.createRelationshipManager(),
+                        identity.getAccount(), retrievedRole)) {
                     list.add(retrievedRole);
                 }
             }
@@ -93,7 +94,7 @@ public class GrantConfiguration implements IdentityManagement.GrantMethods<User>
     @Override
     public void to(User user) {
         for (Role role : list) {
-            this.identityManager.revokeRole(user, role);
+            SampleModel.revokeRole(partitionManager.createRelationshipManager(), user, role);
         }
     }
 
