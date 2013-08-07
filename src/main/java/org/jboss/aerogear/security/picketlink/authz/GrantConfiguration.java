@@ -18,6 +18,7 @@
 package org.jboss.aerogear.security.picketlink.authz;
 
 import org.jboss.aerogear.security.authz.IdentityManagement;
+import org.picketlink.Identity;
 import org.picketlink.idm.IdentityManager;
 import org.picketlink.idm.model.Role;
 import org.picketlink.idm.model.SimpleRole;
@@ -36,6 +37,8 @@ public class GrantConfiguration implements IdentityManagement.GrantMethods<User>
 
     @Inject
     private IdentityManager identityManager;
+    @Inject
+    private Identity identity;
 
     private List<Role> list;
 
@@ -45,6 +48,7 @@ public class GrantConfiguration implements IdentityManagement.GrantMethods<User>
      * @param roles Array of roles
      * @return builder implementation
      */
+    @Override
     public GrantConfiguration roles(String[] roles) {
         list = new ArrayList<Role>();
         for (String role : roles) {
@@ -56,6 +60,37 @@ public class GrantConfiguration implements IdentityManagement.GrantMethods<User>
             list.add(newRole);
         }
         return this;
+    }
+
+    /**
+     * This method allows to revoke which <i>roles</i> must be revoked to User
+     *
+     * @param roles List of roles to be revoked
+     */
+    @Override
+    public GrantConfiguration revoke(String... roles) {
+        list = new ArrayList<Role>();
+        if (identity.isLoggedIn()) {
+            for (String role : roles) {
+                Role retrievedRole = identityManager.getRole(role);
+                if (retrievedRole != null && identityManager.hasRole(identity.getAgent(), retrievedRole)) {
+                    list.add(retrievedRole);
+                }
+            }
+        }
+        return this;
+    }
+
+    /**
+     * This method revokes roles specified on {@link IdentityManagement#revoke(String...)}
+     *
+     * @param user represents a simple user's implementation to hold credentials.
+     */
+    @Override
+    public void to(User user) {
+        for (Role role : list) {
+            this.identityManager.revokeRole(user, role);
+        }
     }
 
     /**

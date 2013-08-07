@@ -65,8 +65,6 @@ public class IDMConfiguration {
                 .partitionClass(PartitionObject.class)
                 .supportAllFeatures();
 
-
-
         identityConfig = builder.build();
     }
 }

@@ -17,12 +17,15 @@
 
 package org.jboss.aerogear.security.picketlink.authz;
 
-
 import org.jboss.aerogear.security.auth.LoggedUser;
 import org.jboss.aerogear.security.auth.Secret;
 import org.jboss.aerogear.security.authz.IdentityManagement;
+import org.jboss.aerogear.security.exception.AeroGearSecurityException;
+import org.jboss.aerogear.security.exception.HttpStatus;
 import org.jboss.aerogear.security.otp.api.Base32;
+import org.jboss.aerogear.security.picketlink.auth.CredentialMatcher;
 import org.picketlink.Identity;
+import org.picketlink.credential.DefaultLoginCredentials;
 import org.picketlink.idm.IdentityManager;
 import org.picketlink.idm.credential.Password;
 import org.picketlink.idm.model.Attribute;
@@ -35,6 +38,7 @@ import javax.enterprise.inject.Produces;
 import javax.inject.Inject;
 import java.util.List;
 import java.util.Set;
+import java.util.logging.Logger;
 
 /**
  * <i>IdentityManagement</i> allows to assign a set of roles to User on Identity Manager provider
@@ -45,10 +49,16 @@ public class IdentityManagementImpl implements IdentityManagement<User> {
     private static final String IDM_SECRET_ATTRIBUTE = "serial";
 
     @Inject
-    private IdentityManager identityManager;
+    private CredentialMatcher credentialMatcher;
 
     @Inject
     private GrantConfiguration grantConfiguration;
+
+    @Inject
+    private IdentityManager identityManager;
+
+    @Inject
+    private DefaultLoginCredentials credentials;
 
     @Inject
     private Identity identity;
@@ -64,11 +74,22 @@ public class IdentityManagementImpl implements IdentityManagement<User> {
         return grantConfiguration.roles(roles);
     }
 
+    /**
+     * This method allows to revoke which <i>roles</i> must be revoked to User
+     *
+     * @param roles The list of roles.
+     * @return {@link GrantMethods} is a builder which a allows to revoke a list of roles to the specified User.
+     */
+    @Override
+    public GrantMethods revoke(String... roles) {
+        return grantConfiguration.revoke(roles);
+    }
+
     @Override
     public User findByUsername(String username) throws RuntimeException {
         User user = identityManager.getUser(username);
         if (user == null) {
-            throw new RuntimeException("User do not exist");
+            throw new AeroGearSecurityException(HttpStatus.CREDENTIAL_NOT_FOUND);
         }
         return user;
     }
@@ -76,10 +97,22 @@ public class IdentityManagementImpl implements IdentityManagement<User> {
     @Override
     public void remove(String username) {
         if (isLoggedIn(username)) {
-            throw new RuntimeException("User is logged in");
+            throw new AeroGearSecurityException(HttpStatus.ALREADY_LOGGED_IN);
         }
         identityManager.remove(identityManager.getUser(username));
 
+    }
+
+    @Override
+    public void reset(User user, String currentPassword, String newPassword) {
+
+        credentialMatcher.validate(user, currentPassword);
+
+        if (credentialMatcher.hasExpired() || credentialMatcher.isValid()) {
+            this.identityManager.updateCredential(user, new Password(newPassword));
+        } else {
+            throw new AeroGearSecurityException(HttpStatus.PASSWORD_RESET_FAILED);
+        }
     }
 
     /**
@@ -130,6 +163,7 @@ public class IdentityManagementImpl implements IdentityManagement<User> {
      */
     @Override
     public boolean hasRoles(Set<String> roles) {
+
         if (identity.isLoggedIn()) {
             for (String role : roles) {
                 Role retrievedRole = identityManager.getRole(role);

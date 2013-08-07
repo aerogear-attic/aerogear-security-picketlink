@@ -23,16 +23,16 @@
 
     <groupId>org.jboss.aerogear</groupId>
     <artifactId>aerogear-security-picketlink</artifactId>
-    <version>1.1.1</version>
+    <version>1.1.2-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <name>aerogear-security-picketlink</name>
     <url>http://aerogear.org</url>
 
     <parent>
-        <groupId>org.jboss</groupId>
-        <artifactId>jboss-parent</artifactId>
-        <version>6-beta-2</version>
+        <groupId>org.jboss.aerogear</groupId>
+        <artifactId>aerogear-parent</artifactId>
+        <version>0.1.0</version>
     </parent>
 
     <licenses>
@@ -70,7 +70,7 @@
         <javaee6.bom.version>1.0.0.Final</javaee6.bom.version>
 
         <!-- Define the version of AeroGear APIs we want to import -->
-        <aerogear.security.version>1.0.1</aerogear.security.version>
+        <aerogear.security.version>1.2.3-SNAPSHOT</aerogear.security.version>
 
         <aerogear.otp.version>1.0.0</aerogear.otp.version>
         <!-- Define the version of PicketLink APIs we want to import -->
@@ -80,17 +80,7 @@
     <repositories>
         <repository>
             <id>jboss-public-snapshot-repository-group</id>
-            <name>JBoss Public Maven Repository Group</name>
             <url>https://repository.jboss.org/nexus/content/repositories/snapshots/</url>
-            <layout>default</layout>
-            <releases>
-                <enabled>true</enabled>
-                <updatePolicy>never</updatePolicy>
-            </releases>
-            <snapshots>
-                <enabled>true</enabled>
-                <updatePolicy>never</updatePolicy>
-            </snapshots>
         </repository>
     </repositories>
 
