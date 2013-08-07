@@ -54,7 +54,8 @@
         <connection>scm:git:git@github.com:aerogear/aerogear-security-picketlink.git</connection>
         <developerConnection>scm:git:git@github.com:aerogear/aerogear-security-picketlink.git</developerConnection>
         <url>git@github.com:aerogear/aerogear-security-picketlink.git</url>
-    </scm>
+      <tag>1.1.2</tag>
+  </scm>
 
     <properties>
         <!-- Explicitly declaring the source encoding eliminates the following
