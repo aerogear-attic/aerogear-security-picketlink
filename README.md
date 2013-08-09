@@ -5,13 +5,15 @@
         <dependency>
              <groupId>org.jboss.aerogear</groupId>
              <artifactId>aerogear-security-picketlink</artifactId>
-             <version>1.1.0</version>
+             <version>1.2.1-SNAPSHOT</version>
              <scope>compile</scope>
         </dependency>
 
+**Current PicketLink Version:** PicketLink 2.5.0 Beta7
+
 ## For further information see:
 
-- [PicketLink](https://github.com/picketlink)
+- [PicketLink](http://www.picketlink.org/)
 - [Apache DeltaSpike](https://github.com/apache/incubator-deltaspike)
 
 ---
