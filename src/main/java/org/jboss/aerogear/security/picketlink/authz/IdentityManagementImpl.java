@@ -91,6 +91,12 @@ public class IdentityManagementImpl implements IdentityManagement<User> {
         return grantConfiguration.revoke(roles);
     }
 
+    /**
+     * Find an User by the username specified
+     *
+     * @param username
+     * @return User
+     */
     @Override
     public User findByUsername(String username) throws RuntimeException {
         User user = SampleModel.getUser(identityManager, username);
@@ -100,6 +106,11 @@ public class IdentityManagementImpl implements IdentityManagement<User> {
         return user;
     }
 
+    /**
+     * Remove an User
+     *
+     * @param username
+     */
     @Override
     public void remove(String username) {
         if (isLoggedIn(username)) {
@@ -109,6 +120,13 @@ public class IdentityManagementImpl implements IdentityManagement<User> {
 
     }
 
+    /**
+     * Reset user' password
+     * @param user User credential
+     * @param currentPassword current password already registered
+     * @param newPassword new password
+     * @throws Exception
+     */
     @Override
     public void reset(User user, String currentPassword, String newPassword) {
 
@@ -133,7 +151,7 @@ public class IdentityManagementImpl implements IdentityManagement<User> {
     }
 
     /**
-     * Represents the generated secret for the current User logged in.
+     * Represents the generated TOTP secret for the current User logged in.
      */
     @Produces
     @Secret
@@ -151,6 +169,10 @@ public class IdentityManagementImpl implements IdentityManagement<User> {
         return secret.getValue();
     }
 
+    /**
+     * Retrieve the logged user name
+     * @return user name
+     */
     @Produces
     @LoggedUser
     public String getLogin() {
@@ -181,6 +203,12 @@ public class IdentityManagementImpl implements IdentityManagement<User> {
         return false;
     }
 
+    /**
+     * Find an User by the id specified
+     *
+     * @param id
+     * @return User
+     */
     @Override
     public User findById(long id) throws RuntimeException {
         IdentityQuery<User> query = identityManager.createIdentityQuery(User.class);
@@ -188,6 +216,12 @@ public class IdentityManagementImpl implements IdentityManagement<User> {
         return query.getResultList().get(0);
     }
 
+    /**
+     * Get All the users
+     *
+     * @param name Role name
+     * @return Users by roles
+     */
     @Override
     public List<User> findAllByRole(String name) {
         Role role = SampleModel.getRole(identityManager, name);
