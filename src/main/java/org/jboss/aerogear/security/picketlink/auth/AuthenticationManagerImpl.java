@@ -22,6 +22,7 @@ import org.jboss.aerogear.security.exception.AeroGearSecurityException;
 import org.jboss.aerogear.security.exception.HttpStatus;
 import org.picketlink.Identity;
 import org.picketlink.credential.DefaultLoginCredentials;
+import org.picketlink.idm.IdentityManager;
 import org.picketlink.idm.credential.Password;
 import org.picketlink.idm.model.sample.User;
 
@@ -40,6 +41,12 @@ public class AuthenticationManagerImpl implements AuthenticationManager<User> {
     @Inject
     private DefaultLoginCredentials credentials;
 
+    @Inject
+    private IdentityManager identityManager;
+
+    @Inject
+    private CredentialMatcher credentialMatcher;
+
     /**
      * Logs in the specified User.
      *
@@ -52,7 +59,11 @@ public class AuthenticationManagerImpl implements AuthenticationManager<User> {
         credentials.setUserId(user.getLoginName());
         credentials.setCredential(new Password(password));
 
-        if (identity.login() != Identity.AuthenticationResult.SUCCESS) {
+        credentialMatcher.validate(user, password);
+
+        if (credentialMatcher.hasExpired()) {
+            throw new AeroGearSecurityException(HttpStatus.CREDENTIAL_HAS_EXPIRED);
+        } else if (identity.login() != Identity.AuthenticationResult.SUCCESS) {
             throw new AeroGearSecurityException(HttpStatus.AUTHENTICATION_FAILED);
         }
 
@@ -76,5 +87,4 @@ public class AuthenticationManagerImpl implements AuthenticationManager<User> {
         if (!identity.isLoggedIn())
             throw new AeroGearSecurityException(HttpStatus.AUTHENTICATION_FAILED);
     }
-
 }
