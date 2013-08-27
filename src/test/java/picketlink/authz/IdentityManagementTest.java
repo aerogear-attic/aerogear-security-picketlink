@@ -29,9 +29,9 @@ import org.mockito.MockitoAnnotations;
 import org.picketlink.Identity;
 import org.picketlink.idm.IdentityManager;
 import org.picketlink.idm.PartitionManager;
-import org.picketlink.idm.model.sample.Role;
-import org.picketlink.idm.model.sample.SampleModel;
-import org.picketlink.idm.model.sample.User;
+import org.picketlink.idm.model.basic.Role;
+import org.picketlink.idm.model.basic.BasicModel;
+import org.picketlink.idm.model.basic.User;
 import org.picketlink.idm.query.internal.DefaultIdentityQuery;
 
 import java.util.ArrayList;
@@ -102,7 +102,7 @@ public class IdentityManagementTest {
     public void testCreate() throws Exception {
         User user = buildUser("john");
         identityManagement.create(user, "123");
-        User picketLinkUser = SampleModel.getUser(identityManager, "john");
+        User picketLinkUser = BasicModel.getUser(identityManager, "john");
         assertEquals("User should exist", picketLinkUser.getLoginName(), user.getLoginName());
     }
 
@@ -117,8 +117,8 @@ public class IdentityManagementTest {
     @Ignore
     public void testHasRoles() throws Exception {
         Role role = mock(Role.class);
-        when(SampleModel.getRole(identityManager, eq("manager"))).thenReturn(role);
-//        when(SampleModel.hasRole(any(User.class), eq(role))).thenReturn(true);
+        when(BasicModel.getRole(identityManager, eq("manager"))).thenReturn(role);
+//        when(BasicModel.hasRole(any(User.class), eq(role))).thenReturn(true);
         Set<String> roles = new HashSet<String>(Arrays.asList("manager", "developer"));
         assertTrue(identityManagement.hasRoles(roles));
     }

@@ -30,10 +30,10 @@ import org.picketlink.idm.IdentityManager;
 import org.picketlink.idm.PartitionManager;
 import org.picketlink.idm.credential.Password;
 import org.picketlink.idm.model.Attribute;
-import org.picketlink.idm.model.sample.GroupRole;
-import org.picketlink.idm.model.sample.Role;
-import org.picketlink.idm.model.sample.SampleModel;
-import org.picketlink.idm.model.sample.User;
+import org.picketlink.idm.model.basic.BasicModel;
+import org.picketlink.idm.model.basic.GroupRole;
+import org.picketlink.idm.model.basic.Role;
+import org.picketlink.idm.model.basic.User;
 import org.picketlink.idm.query.IdentityQuery;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -41,7 +41,6 @@ import javax.enterprise.inject.Produces;
 import javax.inject.Inject;
 import java.util.List;
 import java.util.Set;
-import java.util.logging.Logger;
 
 /**
  * <i>IdentityManagement</i> allows to assign a set of roles to User on Identity Manager provider
@@ -99,7 +98,7 @@ public class IdentityManagementImpl implements IdentityManagement<User> {
      */
     @Override
     public User findByUsername(String username) throws RuntimeException {
-        User user = SampleModel.getUser(identityManager, username);
+        User user = BasicModel.getUser(identityManager, username);
         if (user == null) {
             throw new AeroGearSecurityException(HttpStatus.CREDENTIAL_NOT_FOUND);
         }
@@ -116,15 +115,16 @@ public class IdentityManagementImpl implements IdentityManagement<User> {
         if (isLoggedIn(username)) {
             throw new AeroGearSecurityException(HttpStatus.ALREADY_LOGGED_IN);
         }
-        identityManager.remove(SampleModel.getUser(identityManager, username));
+        identityManager.remove(BasicModel.getUser(identityManager, username));
 
     }
 
     /**
      * Reset user' password
-     * @param user User credential
+     *
+     * @param user            User credential
      * @param currentPassword current password already registered
-     * @param newPassword new password
+     * @param newPassword     new password
      * @throws Exception
      */
     @Override
@@ -171,6 +171,7 @@ public class IdentityManagementImpl implements IdentityManagement<User> {
 
     /**
      * Retrieve the logged user name
+     *
      * @return user name
      */
     @Produces
@@ -194,8 +195,8 @@ public class IdentityManagementImpl implements IdentityManagement<User> {
 
         if (identity.isLoggedIn()) {
             for (String role : roles) {
-                Role retrievedRole = SampleModel.getRole(identityManager, role);
-                if (retrievedRole != null && SampleModel.hasRole(partitionManager.createRelationshipManager(), identity.getAccount(), retrievedRole)) {
+                Role retrievedRole = BasicModel.getRole(identityManager, role);
+                if (retrievedRole != null && BasicModel.hasRole(partitionManager.createRelationshipManager(), identity.getAccount(), retrievedRole)) {
                     return true;
                 }
             }
@@ -224,7 +225,7 @@ public class IdentityManagementImpl implements IdentityManagement<User> {
      */
     @Override
     public List<User> findAllByRole(String name) {
-        Role role = SampleModel.getRole(identityManager, name);
+        Role role = BasicModel.getRole(identityManager, name);
         IdentityQuery<User> query = identityManager.createIdentityQuery(User.class);
         query.setParameter(GroupRole.ROLE, role);
         return query.getResultList();

@@ -21,9 +21,9 @@ import org.jboss.aerogear.security.authz.IdentityManagement;
 import org.picketlink.Identity;
 import org.picketlink.idm.IdentityManager;
 import org.picketlink.idm.PartitionManager;
-import org.picketlink.idm.model.sample.Role;
-import org.picketlink.idm.model.sample.SampleModel;
-import org.picketlink.idm.model.sample.User;
+import org.picketlink.idm.model.basic.Role;
+import org.picketlink.idm.model.basic.BasicModel;
+import org.picketlink.idm.model.basic.User;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -56,7 +56,7 @@ public class GrantConfiguration implements IdentityManagement.GrantMethods<User>
     public GrantConfiguration roles(String[] roles) {
         list = new ArrayList<Role>();
         for (String role : roles) {
-            Role newRole = SampleModel.getRole(identityManager, role);
+            Role newRole = BasicModel.getRole(identityManager, role);
             if (newRole == null) {
                 newRole = new Role(role);
                 identityManager.add(newRole);
@@ -76,8 +76,8 @@ public class GrantConfiguration implements IdentityManagement.GrantMethods<User>
         list = new ArrayList<Role>();
         if (identity.isLoggedIn()) {
             for (String role : roles) {
-                Role retrievedRole = SampleModel.getRole(identityManager, role);
-                if (retrievedRole != null && SampleModel.hasRole(partitionManager.createRelationshipManager(),
+                Role retrievedRole = BasicModel.getRole(identityManager, role);
+                if (retrievedRole != null && BasicModel.hasRole(partitionManager.createRelationshipManager(),
                         identity.getAccount(), retrievedRole)) {
                     list.add(retrievedRole);
                 }
@@ -94,7 +94,7 @@ public class GrantConfiguration implements IdentityManagement.GrantMethods<User>
     @Override
     public void to(User user) {
         for (Role role : list) {
-            SampleModel.revokeRole(partitionManager.createRelationshipManager(), user, role);
+            BasicModel.revokeRole(partitionManager.createRelationshipManager(), user, role);
         }
     }
 
@@ -106,10 +106,10 @@ public class GrantConfiguration implements IdentityManagement.GrantMethods<User>
     @Override
     public void to(String username) {
 
-        User picketLinkUser = SampleModel.getUser(identityManager, username);
+        User picketLinkUser = BasicModel.getUser(identityManager, username);
 
         for (Role role : list) {
-            SampleModel.grantRole(partitionManager.createRelationshipManager(), picketLinkUser, role);
+            BasicModel.grantRole(partitionManager.createRelationshipManager(), picketLinkUser, role);
         }
 
     }

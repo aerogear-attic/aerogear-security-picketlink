@@ -25,7 +25,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.picketlink.idm.IdentityManager;
-import org.picketlink.idm.model.sample.User;
+import org.picketlink.idm.model.basic.User;
 
 public class GrantConfigurationTest {
 
