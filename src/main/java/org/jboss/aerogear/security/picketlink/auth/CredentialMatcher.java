@@ -21,7 +21,7 @@ import org.picketlink.idm.IdentityManager;
 import org.picketlink.idm.credential.Credentials;
 import org.picketlink.idm.credential.Password;
 import org.picketlink.idm.credential.UsernamePasswordCredentials;
-import org.picketlink.idm.model.sample.User;
+import org.picketlink.idm.model.basic.Agent;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -63,7 +63,7 @@ public class CredentialMatcher {
      * @param password
      * @return builder implementation
      */
-    public void validate(User user, String password) {
+    public void validate(Agent user, String password) {
         Credentials credential = new UsernamePasswordCredentials(user.getLoginName(), new Password(password));
         identityManager.validateCredentials(credential);
         this.credential = credential;

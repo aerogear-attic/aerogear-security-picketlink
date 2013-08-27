@@ -24,7 +24,8 @@ import org.picketlink.Identity;
 import org.picketlink.credential.DefaultLoginCredentials;
 import org.picketlink.idm.IdentityManager;
 import org.picketlink.idm.credential.Password;
-import org.picketlink.idm.model.sample.User;
+import org.picketlink.idm.model.basic.Agent;
+import org.picketlink.idm.model.basic.User;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -33,7 +34,7 @@ import javax.inject.Inject;
  * A <i>AuthenticationManager</i> implementation executes the basic authentication operations for User
  */
 @ApplicationScoped
-public class AuthenticationManagerImpl implements AuthenticationManager<User> {
+public class AuthenticationManagerImpl implements AuthenticationManager<Agent> {
 
     @Inject
     private Identity identity;
@@ -54,7 +55,7 @@ public class AuthenticationManagerImpl implements AuthenticationManager<User> {
      * @throws org.jboss.aerogear.security.exception.AeroGearSecurityException
      *          on login failure.
      */
-    public boolean login(User user, String password) {
+    public boolean login(Agent user, String password) {
 
         credentials.setUserId(user.getLoginName());
         credentials.setCredential(new Password(password));
