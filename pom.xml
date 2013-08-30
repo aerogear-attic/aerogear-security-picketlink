@@ -73,7 +73,7 @@
 
         <aerogear.otp.version>1.0.0</aerogear.otp.version>
         <!-- Define the version of PicketLink APIs we want to import -->
-        <picketlink.version>2.5.0.CR2</picketlink.version>
+        <picketlink.version>2.5.0.Final</picketlink.version>
     </properties>
 
     <repositories>
