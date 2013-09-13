@@ -130,7 +130,7 @@
         <dependency>
             <groupId>org.picketlink</groupId>
             <artifactId>picketlink-impl</artifactId>
-            <scope>runtime</scope>
+            <scope>compile</scope>
             <version>${picketlink.version}</version>
         </dependency>
 
