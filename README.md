@@ -1,29 +1,5 @@
-# aerogear-security-picketlink - Security Provider Implementation
+# DEPRECATION NOTICE
 
-## Getting started
+AeroGear Security was born 2 years ago, by that time frameworks didn't have anything for mobile on the server side. Thus, we added few classes to support the bare minimum.
 
-        <dependency>
-             <groupId>org.jboss.aerogear</groupId>
-             <artifactId>aerogear-security-picketlink</artifactId>
-             <version>1.2.1</version>
-             <scope>compile</scope>
-        </dependency>
-
-**Current PicketLink Version:** PicketLink 2.5.0 Beta7
-
-## Are you feeling brave? Try from the snapshot releases!
-
-     <dependency>
-         <groupId>org.jboss.aerogear</groupId>
-         <artifactId>aerogear-security</artifactId>
-         <version>1.2.2-SNAPSHOT</version>
-         <scope>compile</scope>
-     </dependency>
-
-## For further information see:
-
-- [PicketLink](http://www.picketlink.org/)
-- [Apache DeltaSpike](https://github.com/apache/incubator-deltaspike)
-
----
-you can find a slightly better example at <https://github.com/aerogear/aerogear-controller-demo> 
+Today, we have more alternatives, like [Keycloak](http://www.jboss.org/keycloak) or [Picketlink](http://www.picketlink.org). If somehow this change will affect you, feel free to contact us at [aerogear-dev](http://aerogear-dev.1069024.n5.nabble.com).
